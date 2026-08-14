@@ -1,0 +1,34 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "inr-takip-app",
+          "appId": "1:531306922897:android:25c7a4907dde06538e1030",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "inr-takip-app",
+          "appId": "1:531306922897:ios:2900730aa8c207678e1030",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "inr-takip-app",
+          "configurations": {
+            "android": "1:531306922897:android:25c7a4907dde06538e1030",
+            "ios": "1:531306922897:ios:2900730aa8c207678e1030"
+          }
+        }
+      }
+    }
+  }
+}

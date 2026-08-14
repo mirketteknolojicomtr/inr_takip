@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "531306922897",
+    "project_id": "inr-takip-app",
+    "storage_bucket": "inr-takip-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531306922897:android:25c7a4907dde06538e1030",
+        "android_client_info": {
+          "package_name": "com.example.inr_takip"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZOMlWSGlFIxXzIZMosw1JYzSuE1WONKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

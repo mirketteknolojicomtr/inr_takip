@@ -1,0 +1,46 @@
+name: inr_takip
+description: "Warfarin kullanicilari icin INR, doz ve K vitamini takip uygulamasi cekirdegi."
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fl_chart: ^0.68.0
+  pdf: ^3.11.0
+  printing: ^5.13.0
+  flutter_local_notifications: ^17.2.0
+  uuid: ^4.4.0
+  flutter_tts: ^4.0.2
+  camera: ^0.10.6
+  google_mlkit_text_recognition: ^0.16.0
+  home_widget: ^0.7.0
+  health: ^11.1.1
+  url_launcher: ^6.3.0
+  workmanager: ^0.9.0+3
+  sqflite: ^2.3.3
+  path: ^1.9.0
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.1
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon.png"
+  adaptive_icon_background: "#064E3B"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+  remove_alpha_ios: true
