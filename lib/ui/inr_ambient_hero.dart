@@ -1,28 +1,42 @@
-/// Ana ekranın üst kısmı için ambient, "fluid dynamics" tarzı görsel özet.
-/// Klasik grafik/dashboard yerine yavaşça hareket eden yeşil/camgöbeği
-/// blob'lar üzerinde yarı saydam bir glassmorphism kart, güncel INR
-/// değerini ve klinik bölgeyi (InrZone) gösterir.
+/// Güncel INR'yi gösteren ambient kart.
 ///
-/// Renk paleti bölgeye göre değişir (yeşil/camgöbeği = hedefte,
-/// amber = hedef dışı, kırmızı/magenta = kritik) — yani estetik seçim
-/// aynı zamanda klinik anlamı da taşır, saf dekorasyon değildir.
+/// Tasarım notu: Bu bileşen daha önce neredeyse tam ekran, sabit koyu
+/// (#031014) bir glassmorphism bloğuydu. Açık temada kartın üst yarısı
+/// katı siyah kalıyordu ve liste kaydırıldığında ekranı baştan aşağı
+/// kaplayarak "uygulama siyah ekran verdi" izlenimi yaratıyordu. Ayrıca
+/// `BackdropFilter` bir `ListView` içinde hem pahalı hem de bazı
+/// cihazlarda hatalı (siyah) rasterize oluyor.
+///
+/// Yeni hâli: yüksekliği sınırlı, zeminini klinik bölge paletinden
+/// ([ZoneColors]) alan, açık/koyu temaya uyan bir kart. Yavaş hareket eden
+/// blob'lar korundu — ama artık zeminin üstünde düşük opaklıkta bir doku
+/// olarak, okunabilirliği bozmadan.
+///
+/// Renk hâlâ klinik anlam taşır (yeşil = hedefte, amber = hedef dışı,
+/// kırmızı = kritik) ve renk tek başına bırakılmaz: değerin altında her
+/// zaman metin + ikon vardır.
 library;
 
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../l10n/domain_labels.dart';
 import '../models/inr_entry.dart';
+import 'theme.dart';
 
 class AmbientInrHero extends StatefulWidget {
   final double inrValue;
   final InrZone zone;
 
+  /// Ölçüm tarihi (verilirse "3 gün önce" gibi bağlam gösterilir).
+  final DateTime? measuredAt;
+
   const AmbientInrHero({
     super.key,
     required this.inrValue,
     required this.zone,
+    this.measuredAt,
   });
 
   @override
@@ -48,66 +62,101 @@ class _AmbientInrHeroState extends State<AmbientInrHero>
     super.dispose();
   }
 
-  ({Color a, Color b, Color c}) _paletteFor(InrZone zone) {
-    switch (zone) {
-      case InrZone.inRange:
-        return (
-          a: const Color(0xFF10D9A0),
-          b: const Color(0xFF06B6D4),
-          c: const Color(0xFF064E3B),
-        );
-      case InrZone.belowRange:
-      case InrZone.aboveRange:
-        return (
-          a: const Color(0xFFF5A623),
-          b: const Color(0xFF0891B2),
-          c: const Color(0xFF7C2D12),
-        );
-      case InrZone.criticalLow:
-      case InrZone.criticalHigh:
-        return (
-          a: const Color(0xFFEF4444),
-          b: const Color(0xFFDB2777),
-          c: const Color(0xFF450A0A),
-        );
-    }
+  String? _relativeLabel(Loc loc, DateTime? date) {
+    if (date == null) return null;
+    final days = DateTime.now().difference(date).inDays;
+    if (days <= 0) return loc.l10n.measuredToday;
+    if (days == 1) return loc.l10n.measuredYesterday;
+    return loc.l10n.measuredDaysAgo(days);
   }
-
-  String _statusTr(InrZone zone) => switch (zone) {
-        InrZone.inRange => 'Hedef aralıkta — denge iyi',
-        InrZone.belowRange => 'Hedefin altında',
-        InrZone.aboveRange => 'Hedefin üstünde',
-        InrZone.criticalLow => 'Kritik düşük — acil durum',
-        InrZone.criticalHigh => 'Kritik yüksek — acil durum',
-      };
 
   @override
   Widget build(BuildContext context) {
-    final palette = _paletteFor(widget.zone);
+    final loc = context.loc;
+    final theme = Theme.of(context);
+    final colors = ZoneColors.of(widget.zone, theme.brightness);
+    final measured = _relativeLabel(loc, widget.measuredAt);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(28),
-      child: AspectRatio(
-        aspectRatio: 1.05,
+      child: Container(
+        // Sabit ve sınırlı yükseklik: kart hiçbir cihazda ekranı kaplamaz.
+        height: 208,
+        decoration: BoxDecoration(
+          color: colors.background,
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(color: colors.border),
+        ),
         child: Stack(
           fit: StackFit.expand,
           children: [
-            const ColoredBox(color: Color(0xFF031014)),
+            // Ambient doku — zeminin üstünde düşük opaklıkta.
             AnimatedBuilder(
               animation: _controller,
               builder: (context, _) => CustomPaint(
                 painter: _FluidPainter(
                   t: _controller.value,
-                  colorA: palette.a,
-                  colorB: palette.b,
-                  colorC: palette.c,
+                  accent: colors.foreground,
+                  border: colors.border,
                 ),
               ),
             ),
-            Center(
-              child: _GlassCard(
-                value: widget.inrValue,
-                statusText: _statusTr(widget.zone),
-                accent: palette.a,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'INR',
+                    style: TextStyle(
+                      color: colors.foreground.withValues(alpha: 0.75),
+                      fontSize: 13,
+                      letterSpacing: 3,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    widget.inrValue.toStringAsFixed(1),
+                    style: TextStyle(
+                      color: colors.foreground,
+                      fontSize: 68,
+                      height: 1.05,
+                      fontWeight: FontWeight.w300,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  // Renk tek başına bilgi taşımasın: ikon + metin.
+                  Row(
+                    children: [
+                      Icon(zoneIcon(widget.zone),
+                          size: 20, color: colors.foreground),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          inrZoneLabel(loc, widget.zone),
+                          style: TextStyle(
+                            color: colors.foreground,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (measured != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      measured,
+                      style: TextStyle(
+                        color: colors.foreground.withValues(alpha: 0.75),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
           ],
@@ -117,28 +166,25 @@ class _AmbientInrHeroState extends State<AmbientInrHero>
   }
 }
 
-/// Yavaşça birbirinin içine geçen, bulanıklaştırılmış radial gradient
-/// blob'larla organik bir "fluid" hareket izlenimi üretir.
+/// Yavaşça birbirinin içine geçen bulanık blob'lar. Kart zemininin
+/// üzerine düşük opaklıkta çizilir; metnin kontrastını bozmaz.
 class _FluidPainter extends CustomPainter {
   final double t;
-  final Color colorA;
-  final Color colorB;
-  final Color colorC;
+  final Color accent;
+  final Color border;
 
-  _FluidPainter({
-    required this.t,
-    required this.colorA,
-    required this.colorB,
-    required this.colorC,
-  });
+  _FluidPainter({required this.t, required this.accent, required this.border});
 
   void _blob(Canvas canvas, Offset center, double radius, Color color,
       double opacity) {
     final paint = Paint()
       ..shader = RadialGradient(
-        colors: [color.withOpacity(opacity), color.withOpacity(0)],
+        colors: [
+          color.withValues(alpha: opacity),
+          color.withValues(alpha: 0),
+        ],
       ).createShader(Rect.fromCircle(center: center, radius: radius))
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 44);
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 40);
     canvas.drawCircle(center, radius, paint);
   }
 
@@ -148,101 +194,42 @@ class _FluidPainter extends CustomPainter {
     final h = size.height;
     final angle = t * 2 * math.pi;
 
+    // Sağ tarafta yoğunlaşır: sol tarafta duran metin okunaklı kalsın.
     _blob(
       canvas,
       Offset(
-        w * 0.5 + math.sin(angle) * w * 0.22,
-        h * 0.42 + math.cos(angle * 1.3) * h * 0.18,
+        w * 0.78 + math.sin(angle) * w * 0.10,
+        h * 0.35 + math.cos(angle * 1.3) * h * 0.20,
       ),
-      w * 0.55,
-      colorA,
-      0.55,
+      w * 0.40,
+      accent,
+      0.22,
     );
     _blob(
       canvas,
       Offset(
-        w * 0.5 + math.cos(angle * 0.8) * w * 0.26,
-        h * 0.58 + math.sin(angle * 1.6) * h * 0.2,
+        w * 0.88 + math.cos(angle * 0.8) * w * 0.12,
+        h * 0.70 + math.sin(angle * 1.6) * h * 0.18,
       ),
-      w * 0.5,
-      colorB,
-      0.5,
-    );
-    _blob(
-      canvas,
-      Offset(
-        w * 0.5 + math.sin(angle * 1.4 + 1) * w * 0.15,
-        h * 0.5 + math.cos(angle * 0.6) * h * 0.15,
-      ),
-      w * 0.35,
-      colorC,
+      w * 0.34,
+      border,
       0.45,
     );
-  }
-
-  @override
-  bool shouldRepaint(covariant _FluidPainter oldDelegate) => oldDelegate.t != t;
-}
-
-class _GlassCard extends StatelessWidget {
-  final double value;
-  final String statusText;
-  final Color accent;
-
-  const _GlassCard({
-    required this.value,
-    required this.statusText,
-    required this.accent,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(24),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 26),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            color: Colors.white.withOpacity(0.08),
-            border: Border.all(color: Colors.white.withOpacity(0.25)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'INR',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
-                  fontSize: 13,
-                  letterSpacing: 3,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                value.toStringAsFixed(1),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 56,
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                statusText,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: accent,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
+    _blob(
+      canvas,
+      Offset(
+        w * 0.62 + math.sin(angle * 1.4 + 1) * w * 0.08,
+        h * 0.55 + math.cos(angle * 0.6) * h * 0.15,
       ),
+      w * 0.24,
+      accent,
+      0.14,
     );
   }
+
+  @override
+  bool shouldRepaint(covariant _FluidPainter oldDelegate) =>
+      oldDelegate.t != t ||
+      oldDelegate.accent != accent ||
+      oldDelegate.border != border;
 }

@@ -6,6 +6,7 @@ library;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/domain_labels.dart';
 import '../models/inr_entry.dart';
 import '../services/trend_service.dart';
 
@@ -14,9 +15,9 @@ class InrTrendChart extends StatelessWidget {
   const InrTrendChart({super.key, required this.data});
 
   Color _bandColor(String kind) => switch (kind) {
-        'safe' => Colors.green.withOpacity(0.15),
-        'caution' => Colors.amber.withOpacity(0.12),
-        _ => Colors.red.withOpacity(0.12),
+        'safe' => Colors.green.withValues(alpha: 0.15),
+        'caution' => Colors.amber.withValues(alpha: 0.12),
+        _ => Colors.red.withValues(alpha: 0.12),
       };
 
   Color _pointColor(InrZone zone) => switch (zone) {
@@ -27,8 +28,9 @@ class InrTrendChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.loc;
     if (data.points.isEmpty) {
-      return const Center(child: Text('Son 30 günde kayıt yok'));
+      return Center(child: Text(loc.l10n.chartNoData));
     }
 
     final firstDay = data.points.first.date;
@@ -77,9 +79,26 @@ class InrTrendChart extends StatelessWidget {
                 const AxisTitles(sideTitles: SideTitles(showTitles: false)),
             rightTitles:
                 const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            leftTitles: const AxisTitles(
-              sideTitles:
-                  SideTitles(showTitles: true, reservedSize: 32, interval: 1),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 36,
+                interval: 1,
+                // Yalnızca tam sayılar: minY (0.5) etiketi "0." / "5"
+                // diye iki satıra kırılıp bir üstteki "1" ile çakışıyordu.
+                getTitlesWidget: (value, meta) {
+                  if (value != value.roundToDouble()) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: Text(
+                      value.toStringAsFixed(0),
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  );
+                },
+              ),
             ),
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(

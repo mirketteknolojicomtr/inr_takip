@@ -17,6 +17,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
+import '../l10n/domain_labels.dart';
 import '../services/inr_ocr_service.dart';
 
 /// Taranan değeri `Navigator.pop(value)` ile çağırana döndürür
@@ -139,6 +140,7 @@ class _InrScanScreenState extends State<InrScanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.loc;
     final controller = _controller;
     return Scaffold(
       backgroundColor: Colors.black,
@@ -146,21 +148,29 @@ class _InrScanScreenState extends State<InrScanScreen> {
         fit: StackFit.expand,
         children: [
           if (_initError != null)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Text(
-                  'Kamera başlatılamadı: $_initError',
-                  style: const TextStyle(color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-              ),
+            _CameraUnavailable(
+              detail: _initError!,
+              onManualEntry: () => Navigator.of(context).pop(),
             )
           else if (controller != null && controller.value.isInitialized)
             CameraPreview(controller)
           else
-            const Center(child: CircularProgressIndicator()),
-          const _ScanOverlay(),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(color: Colors.white),
+                  const SizedBox(height: 16),
+                  Text(
+                    loc.l10n.cameraPreparing,
+                    style: const TextStyle(
+                        color: Colors.white70, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          // Nişangah yalnızca canlı önizleme varken anlamlı.
+          if (_initError == null) const _ScanOverlay(),
           if (_capturedValue != null)
             _ResultCard(
               value: _capturedValue!,
@@ -176,6 +186,64 @@ class _InrScanScreenState extends State<InrScanScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Kamera açılamadığında (izin yok, simülatör, donanım hatası) gösterilir.
+/// Kullanıcı çıkmaza düşmesin diye elle girişe yönlendirir.
+class _CameraUnavailable extends StatelessWidget {
+  final String detail;
+  final VoidCallback onManualEntry;
+
+  const _CameraUnavailable({required this.detail, required this.onManualEntry});
+
+  @override
+  Widget build(BuildContext context) {
+    final loc = context.loc;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.no_photography_outlined,
+                size: 56, color: Colors.white70),
+            const SizedBox(height: 20),
+            Text(
+              loc.l10n.cameraFailedTitle,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              loc.l10n.cameraFailedMessage,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  color: Colors.white70, fontSize: 16, height: 1.4),
+            ),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: onManualEntry,
+              icon: const Icon(Icons.keyboard),
+              label: const Text('Elle gir'),
+            ),
+            const SizedBox(height: 20),
+            // Teknik ayrıntı, hata bildirimi için görünür ama öne çıkmaz.
+            Text(
+              detail,
+              textAlign: TextAlign.center,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: Colors.white38, fontSize: 12),
+            ),
+          ],
+        ),
       ),
     );
   }

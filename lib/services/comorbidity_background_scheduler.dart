@@ -13,6 +13,7 @@ library;
 import 'package:workmanager/workmanager.dart';
 
 import '../repositories/sqflite_repositories.dart';
+import 'app_settings.dart';
 import 'comorbidity_sync_service.dart';
 import 'health_package_metrics_gateway.dart';
 import 'local_notification_gateway.dart';
@@ -27,12 +28,15 @@ void comorbidityCallbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     if (task != comorbiditySyncTaskName) return true;
 
-    final notificationGateway = LocalNotificationGateway();
+    final notificationGateway = LocalNotificationGateway(resolveLoc);
     await notificationGateway.initialize();
 
+    // Arka plan izolatında widget ağacı yok: dil sqflite'taki cihaz
+    // tercihinden okunur (bkz. services/app_settings.dart).
     final syncService = ComorbiditySyncService(
       HealthPackageMetricsGateway(),
       notificationGateway,
+      resolveLoc,
     );
 
     final inrRepo = SqfliteInrRepository();

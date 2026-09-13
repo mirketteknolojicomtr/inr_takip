@@ -1,0 +1,11 @@
+# Flutter gen_l10n yapılandırması.
+# Şablon dil Türkçe: uygulama Türkçe yazıldı, yeni dizeler önce buraya
+# eklenir; diğer diller bu dosyadan türetilir.
+arb-dir: lib/l10n
+template-arb-file: app_tr.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: false
+# Eksik çeviriler derlemeyi durdurmasın (18 dil aşamalı doldurulur);
+# eksik anahtar şablon dildeki metne düşer.
+untranslated-messages-file: l10n_missing.txt

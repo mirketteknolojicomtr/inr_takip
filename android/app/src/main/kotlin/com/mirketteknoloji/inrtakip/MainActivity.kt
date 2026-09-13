@@ -1,4 +1,4 @@
-package com.example.inr_takip
+package com.mirketteknoloji.inrtakip
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine

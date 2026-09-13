@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.example.inrTakip</string>
+		<string>group.com.mirketteknoloji.inrtakip</string>
 	</array>
 </dict>
 </plist>

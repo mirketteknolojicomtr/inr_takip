@@ -28,6 +28,7 @@
 /// pubspec: health: ^11.1.1
 library;
 
+import '../l10n/domain_labels.dart';
 import '../models/inr_entry.dart';
 import 'alert_service.dart';
 
@@ -64,14 +65,12 @@ class ComorbidityAlert {
     required this.latestInr,
   });
 
+  /// Metin üretmez: tür + parametreler (bkz. l10n/domain_labels.dart).
   InrAlert toInrAlert() => InrAlert(
         severity: AlertSeverity.critical,
-        titleTr: 'Olası akut ödem + hedef dışı INR',
-        messageTr:
-            'Son 24 saatte ${weightDeltaKg.toStringAsFixed(1)} kg ani kilo '
-            'artışı (sıvı birikmesi belirtisi olabilir) kaydedildi ve '
-            'güncel INR ${latestInr.toStringAsFixed(1)} hedef aralığın '
-            'dışında. Bu bilgiyi doktorunuzla paylaşmanız önerilir.',
+        kind: InrAlertKind.edema,
+        inrValue: latestInr,
+        weightDeltaKg: weightDeltaKg,
         notifyEmergencyContact: true,
       );
 }
@@ -107,11 +106,13 @@ class EdemaRiskEvaluator {
 class ComorbiditySyncService {
   final HealthMetricsGateway _health;
   final NotificationGateway _notifications;
+  final LocProvider _loc;
   final EdemaRiskEvaluator _evaluator;
 
   ComorbiditySyncService(
     this._health,
-    this._notifications, {
+    this._notifications,
+    this._loc, {
     EdemaRiskEvaluator evaluator = const EdemaRiskEvaluator(),
   }) : _evaluator = evaluator;
 
@@ -123,7 +124,13 @@ class ComorbiditySyncService {
     final alert =
         _evaluator.evaluate(weights24h: weights, latestInr: latestInr);
     if (alert != null) {
-      await _notifications.showLocalAlert(alert.toInrAlert());
+      final inrAlert = alert.toInrAlert();
+      final loc = await _loc();
+      await _notifications.showLocalAlert(
+        title: alertTitle(loc, inrAlert),
+        body: alertMessage(loc, inrAlert),
+        severity: inrAlert.severity,
+      );
     }
     return alert;
   }

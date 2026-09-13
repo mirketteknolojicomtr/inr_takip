@@ -3,7 +3,7 @@ import SwiftUI
 
 /// `HomeWidgetLockScreenGateway` (Dart) ile birebir aynı olmalı —
 /// `HomeWidget.setAppGroupId()` çağrısındaki değer.
-private let appGroupId = "group.com.example.inrTakip"
+private let appGroupId = "group.com.mirketteknoloji.inrtakip"
 
 struct InrEmergencyEntry: TimelineEntry {
     let date: Date

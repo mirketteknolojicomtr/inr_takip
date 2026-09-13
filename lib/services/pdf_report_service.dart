@@ -9,6 +9,7 @@ import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+import '../l10n/domain_labels.dart';
 import '../models/inr_entry.dart';
 import '../models/patient_profile.dart';
 import '../repositories/repositories.dart';
@@ -18,23 +19,18 @@ class PdfReportService {
 
   PdfReportService(this._inrRepo);
 
-  String _fmtDate(DateTime d) =>
-      '${d.day.toString().padLeft(2, '0')}.${d.month.toString().padLeft(2, '0')}.${d.year}';
+  String _status(Loc loc, InrEntry e, PatientProfile p) => inrZoneLabel(
+        loc,
+        e.zoneWith(criticalLow: p.criticalLow, criticalHigh: p.criticalHigh),
+      );
 
-  String _statusTr(InrEntry e, PatientProfile p) {
-    return switch (e.zoneWith(
-        criticalLow: p.criticalLow, criticalHigh: p.criticalHigh)) {
-      InrZone.inRange => 'Hedefte',
-      InrZone.belowRange => 'Düşük',
-      InrZone.aboveRange => 'Yüksek',
-      InrZone.criticalLow => 'KRİTİK DÜŞÜK',
-      InrZone.criticalHigh => 'KRİTİK YÜKSEK',
-    };
-  }
-
-  /// Son [months] ayın raporunu üretir. Dönen byte'lar
+  /// Son [months] ayın raporunu [loc] dilinde üretir. Dönen byte'lar
   /// `Printing.sharePdf(bytes: ...)` ile tek tuşla paylaşılabilir.
+  ///
+  /// Rapor doktora gidiyor: tarih ve sayı biçimleri de hastanın bölgesine
+  /// göre yazılır, aksi hâlde "05.03" hangi ay olduğu belirsiz kalırdı.
   Future<Uint8List> buildReport(
+    Loc loc,
     PatientProfile profile, {
     int months = 3,
   }) async {
@@ -56,14 +52,18 @@ class PdfReportService {
         header: (ctx) => pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            pw.Text('INR Takip Raporu',
+            pw.Text(loc.l10n.pdfTitle,
                 style: pw.TextStyle(
                     fontSize: 20, fontWeight: pw.FontWeight.bold)),
             pw.SizedBox(height: 4),
             pw.Text(
-                'Hasta: ${profile.name}   |   '
-                'Hedef aralık: ${profile.targetRange.lower} - ${profile.targetRange.upper}   |   '
-                'Dönem: ${_fmtDate(from)} - ${_fmtDate(now)}',
+                loc.l10n.pdfHeaderLine(
+                  profile.name,
+                  loc.formats.inr(profile.targetRange.lower),
+                  loc.formats.inr(profile.targetRange.upper),
+                  loc.formats.date(from),
+                  loc.formats.date(now),
+                ),
                 style: const pw.TextStyle(fontSize: 10)),
             pw.Divider(),
           ],
@@ -75,13 +75,18 @@ class PdfReportService {
         ),
         build: (ctx) => [
           pw.Paragraph(
-            text: 'Toplam ölçüm: ${entries.length}   •   '
-                'Hedef aralıkta kalma: %$pct',
+            text: loc.l10n.pdfSummaryLine(entries.length, '$pct'),
             style: const pw.TextStyle(fontSize: 11),
           ),
           pw.SizedBox(height: 8),
           pw.TableHelper.fromTextArray(
-            headers: ['Tarih', 'INR', 'Doz (mg/gün)', 'Durum', 'Not'],
+            headers: [
+              loc.l10n.pdfColumnDate,
+              loc.l10n.pdfColumnInr,
+              loc.l10n.pdfColumnDose,
+              loc.l10n.pdfColumnStatus,
+              loc.l10n.pdfColumnNote,
+            ],
             headerStyle: pw.TextStyle(
                 fontWeight: pw.FontWeight.bold, fontSize: 10),
             cellStyle: const pw.TextStyle(fontSize: 10),
@@ -100,18 +105,17 @@ class PdfReportService {
             data: [
               for (final e in entries.reversed)
                 [
-                  _fmtDate(e.date),
-                  e.inrValue.toStringAsFixed(1),
-                  e.doseMg.toStringAsFixed(1),
-                  _statusTr(e, profile),
+                  loc.formats.date(e.date),
+                  loc.formats.inr(e.inrValue),
+                  loc.formats.decimal(e.doseMg, maxFractionDigits: 1),
+                  _status(loc, e, profile),
                   e.note ?? '',
                 ],
             ],
           ),
           pw.SizedBox(height: 16),
           pw.Text(
-            'Bu rapor hasta tarafından girilen verilerle oluşturulmuştur; '
-            'tıbbi karar için hekim değerlendirmesi esastır.',
+            loc.l10n.pdfDisclaimer,
             style: pw.TextStyle(
                 fontSize: 8, fontStyle: pw.FontStyle.italic),
           ),

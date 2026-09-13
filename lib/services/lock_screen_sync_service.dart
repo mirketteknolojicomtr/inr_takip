@@ -1,9 +1,15 @@
-/// Kilit Ekranı / Acil Durum Widget Senkronizasyonu.
+/// Acil Durum Yüzeyi Senkronizasyonu (widget + NFC).
 ///
 /// InrRepository + ProfileRepository'deki değişiklikleri dinler, saf bir
-/// fonksiyonla ([LockScreenPayload.build]) gösterilecek metni üretir ve
-/// [LockScreenGateway] üzerinden paylaşılan depoya (App Group / Android
-/// SharedPreferences) yazıp widget'ın zaman çizelgesini yeniler.
+/// fonksiyonla ([LockScreenPayload.build]) gösterilecek veriyi üretir ve
+/// kayıtlı **her** [LockScreenGateway]'e yayınlar:
+///   - [HomeWidgetLockScreenGateway] -> ana/kilit ekranı widget'ı (premium),
+///   - [NfcEmergencyService] -> Android HCE ile pasif NFC kartı (ücretsiz;
+///     acil durum kartı `kAlwaysFreeFeatures` içindedir).
+///
+/// Bir gateway hata verirse (ör. NFC donanımı yok, iOS'ta HCE desteklenmiyor)
+/// diğerleri yayına devam eder: acil durum yüzeylerinden birinin arızası
+/// ötekini sessizce düşürmemelidir.
 ///
 /// Native taraf (bu dosyanın kapsamı dışında, iOS/Android proje
 /// hedeflerinde yazılır):
@@ -17,11 +23,14 @@ library;
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:home_widget/home_widget.dart';
 
+import '../l10n/domain_labels.dart';
 import '../models/inr_entry.dart';
 import '../models/patient_profile.dart';
 import '../repositories/repositories.dart';
+import 'alert_service.dart' show LocProvider;
 
 /// Widget'ta gösterilecek verinin saf/yan-etkisiz temsili.
 /// Native tarafın anlayacağı düz string alanlara indirger.
@@ -61,19 +70,23 @@ class LockScreenPayload {
   }
 
   /// Kilit ekranında tek satırda gösterilecek, yüksek okunabilirlikli özet.
-  /// Örn: "SON INR: 2.5 (STABİL)"
-  String get headlineTr {
+  /// Örn: "SON INR: 2,5 (STABİL)" — dil ve sayı biçimi [loc]'tan gelir.
+  String headline(Loc loc) {
     final value = lastInr;
-    if (value == null) return 'INR kaydı yok';
-    final status = isStable ? 'STABİL' : 'DİKKAT';
-    return 'SON INR: ${value.toStringAsFixed(1)} ($status)';
+    if (value == null) return loc.l10n.emergencyNoRecord;
+    final status = isStable
+        ? loc.l10n.emergencyStatusStable
+        : loc.l10n.emergencyStatusAttention;
+    return loc.l10n.emergencyHeadline(loc.formats.inr(value), status);
   }
 }
 
 /// Widget'ın okuyacağı paylaşılan depoya yazan soyutlama —
 /// testte mock'lanır, üretimde [HomeWidgetLockScreenGateway] kullanılır.
 abstract interface class LockScreenGateway {
-  Future<void> publish(LockScreenPayload payload);
+  /// [loc] dışarıdan verilir: widget ve NFC yüzeyleri aynı senkron
+  /// döngüsünde, aynı dilde yayınlanmalıdır.
+  Future<void> publish(LockScreenPayload payload, Loc loc);
 }
 
 /// `home_widget` paketiyle App Group (iOS) / SharedPreferences (Android)
@@ -84,7 +97,7 @@ class HomeWidgetLockScreenGateway implements LockScreenGateway {
 
   /// ios/InrEmergencyWidgetExtension'daki entitlements dosyasıyla ve
   /// ios/Runner/Runner.entitlements ile birebir aynı olmalı.
-  static const _iosAppGroupId = 'group.com.example.inrTakip';
+  static const _iosAppGroupId = 'group.com.mirketteknoloji.inrtakip';
 
   bool _appGroupConfigured = false;
 
@@ -95,10 +108,10 @@ class HomeWidgetLockScreenGateway implements LockScreenGateway {
   }
 
   @override
-  Future<void> publish(LockScreenPayload payload) async {
+  Future<void> publish(LockScreenPayload payload, Loc loc) async {
     await _ensureAppGroupConfigured();
     await HomeWidget.saveWidgetData<String>('patientName', payload.patientName);
-    await HomeWidget.saveWidgetData<String>('headline', payload.headlineTr);
+    await HomeWidget.saveWidgetData<String>('headline', payload.headline(loc));
     await HomeWidget.saveWidgetData<String>(
         'medication', payload.medicationName);
     await HomeWidget.saveWidgetData<String>(
@@ -116,27 +129,60 @@ class HomeWidgetLockScreenGateway implements LockScreenGateway {
 class LockScreenSyncService {
   final InrRepository _inrRepo;
   final ProfileRepository _profileRepo;
-  final LockScreenGateway _gateway;
+  final List<LockScreenGateway> _gateways;
+  final LocProvider _loc;
 
   StreamSubscription<List<InrEntry>>? _sub;
+  bool _started = false;
 
-  LockScreenSyncService(this._inrRepo, this._profileRepo, this._gateway);
+  LockScreenSyncService(
+    this._inrRepo,
+    this._profileRepo,
+    List<LockScreenGateway> gateways,
+    this._loc,
+  ) : _gateways = [...gateways];
 
   /// İlk senkronizasyonu yapar, sonra her yeni INR kaydında otomatik
   /// tekrarlar. Poll yok — repository'nin zaten reaktif olan
   /// `watchEntries()` akışına abone olunur (bkz. ARCHITECTURE.md).
+  /// Birden fazla çağrılırsa (ör. önce ücretsiz NFC yüzeyi, sonra abonelik
+  /// açılınca widget) ikinci abonelik açılmaz.
   Future<void> start() async {
+    if (_started) {
+      await _syncNow();
+      return;
+    }
+    _started = true;
     await _syncNow();
     _sub = _inrRepo.watchEntries().listen((_) => _syncNow());
   }
 
+  /// Çalışırken yeni bir yüzey ekler ve hemen besler — abonelik uygulama
+  /// açıkken satın alındığında widget'ın boş kalmaması için.
+  Future<void> addGateway(LockScreenGateway gateway) async {
+    if (_gateways.contains(gateway)) return;
+    _gateways.add(gateway);
+    if (_started) await _syncNow();
+  }
+
   Future<void> _syncNow() async {
+    if (_gateways.isEmpty) return;
     final profile = await _profileRepo.getProfile();
     if (profile == null) return;
     final latest = await _inrRepo.getLatest();
-    await _gateway.publish(
-      LockScreenPayload.build(profile: profile, latestEntry: latest),
-    );
+    final payload =
+        LockScreenPayload.build(profile: profile, latestEntry: latest);
+    final loc = await _loc();
+
+    for (final gateway in _gateways) {
+      try {
+        await gateway.publish(payload, loc);
+      } catch (e) {
+        // Tek bir yüzeyin arızası (NFC donanımı yok, widget kaldırılmış)
+        // diğerlerini durdurmamalı.
+        debugPrint('[ACİL YÜZEY YAYIN HATASI] ${gateway.runtimeType}: $e');
+      }
+    }
   }
 
   void dispose() => _sub?.cancel();

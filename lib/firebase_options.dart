@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -51,7 +42,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDZOMlWSGlFIxXzIZMosw1JYzSuE1WONKI',
-    appId: '1:531306922897:android:25c7a4907dde06538e1030',
+    appId: '1:531306922897:android:f34d03fd6f6689e38e1030',
     messagingSenderId: '531306922897',
     projectId: 'inr-takip-app',
     storageBucket: 'inr-takip-app.firebasestorage.app',
@@ -59,10 +50,38 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDPFpC0e0Kv6elyYczGFRyn6uqUGccVWHI',
+    appId: '1:531306922897:ios:addc035de297b64c8e1030',
+    messagingSenderId: '531306922897',
+    projectId: 'inr-takip-app',
+    storageBucket: 'inr-takip-app.firebasestorage.app',
+    iosBundleId: 'com.mirketteknoloji.inrtakip',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAc_MUdk53Icqq9rpHvKQenjDMk1pPshcw',
+    appId: '1:531306922897:web:c5c470b4ea04f5dc8e1030',
+    messagingSenderId: '531306922897',
+    projectId: 'inr-takip-app',
+    authDomain: 'inr-takip-app.firebaseapp.com',
+    storageBucket: 'inr-takip-app.firebasestorage.app',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDPFpC0e0Kv6elyYczGFRyn6uqUGccVWHI',
     appId: '1:531306922897:ios:2900730aa8c207678e1030',
     messagingSenderId: '531306922897',
     projectId: 'inr-takip-app',
     storageBucket: 'inr-takip-app.firebasestorage.app',
     iosBundleId: 'com.example.inrTakip',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyAc_MUdk53Icqq9rpHvKQenjDMk1pPshcw',
+    appId: '1:531306922897:web:35c88589fc1e06de8e1030',
+    messagingSenderId: '531306922897',
+    projectId: 'inr-takip-app',
+    authDomain: 'inr-takip-app.firebaseapp.com',
+    storageBucket: 'inr-takip-app.firebasestorage.app',
+  );
+
 }

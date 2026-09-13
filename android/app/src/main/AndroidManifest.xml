@@ -2,11 +2,21 @@
     <uses-permission android:name="android.permission.health.READ_WEIGHT"/>
     <uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- İlaç hatırlatıcısı: doz saatinin dakikası önemli olduğu için tam
+         zamanlı alarm gerekir. USE_EXACT_ALARM, "alarm/hatırlatıcı" temel
+         işlevi olan uygulamalar içindir; izin verilmezse uygulama
+         yaklaşık moda düşer (bkz. services/local_reminder_scheduler.dart). -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+    <!-- Cihaz yeniden başladığında planlı hatırlatıcılar yeniden kurulur. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- Play Store abonelikleri (RevenueCat / Google Play Billing). -->
+    <uses-permission android:name="com.android.vending.BILLING"/>
     <uses-permission android:name="android.permission.NFC"/>
     <uses-feature android:name="android.hardware.nfc" android:required="false"/>
 
     <application
-        android:label="inr_takip"
+        android:label="INR Takip"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -48,6 +58,22 @@
                 android:name="android.nfc.cardemulation.host_apdu_service"
                 android:resource="@xml/apduservice"/>
         </service>
+
+        <!-- flutter_local_notifications: yeniden başlatma sonrası planlı
+             ilaç hatırlatıcılarını geri yükler. -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+            android:exported="false"/>
 
         <receiver
             android:name=".InrEmergencyGlanceWidget"

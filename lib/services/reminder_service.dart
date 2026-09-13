@@ -1,19 +1,21 @@
-/// İlaç Saati Hatırlatıcısı.
-/// 1) ReminderService: her gün aynı saate yerel bildirim planlar
-///    (flutter_local_notifications soyutlanmıştır).
-/// 2) DoseCountdownWidget: ana ekranda saniye saniye geri sayan widget.
-/// pubspec: flutter_local_notifications: ^17.0.0
+/// İlaç Saati Hatırlatıcısı — planlama mantığı.
+///
+/// Artık tek bir "günlük saat" değil, her ilacın kendi sıklığı
+/// (her gün / gün aşırı / belirli günler / haftalık şema) ve her alım
+/// saatindeki miktarı için ayrı bildirim planlanır. Bildirim metni dozu
+/// da yazar: "Warfarin — 5 mg (1 tablet)".
+///
+/// Platform soyutlaması [ReminderScheduler] üzerindedir; gerçek
+/// implementasyon `local_reminder_scheduler.dart`.
 library;
 
-import 'dart:async';
-
-import 'package:flutter/material.dart';
-
-import '../models/patient_profile.dart';
-import '../ui/safe_touch.dart';
+import '../l10n/domain_labels.dart';
+import '../models/medication.dart';
+import 'alert_service.dart' show LocProvider;
 
 /// Platform bildirim soyutlaması — testte mock'lanır.
 abstract interface class ReminderScheduler {
+  /// Her gün aynı saatte tekrarlayan bildirim.
   Future<void> scheduleDaily({
     required int id,
     required int hour,
@@ -21,133 +23,139 @@ abstract interface class ReminderScheduler {
     required String title,
     required String body,
   });
-  Future<void> cancel(int id);
-}
 
-class ReminderService {
-  static const _doseReminderId = 1001;
-  final ReminderScheduler _scheduler;
-
-  ReminderService(this._scheduler);
-
-  Future<void> syncWithProfile(PatientProfile profile) async {
-    await _scheduler.cancel(_doseReminderId);
-    await _scheduler.scheduleDaily(
-      id: _doseReminderId,
-      hour: profile.schedule.hour,
-      minute: profile.schedule.minute,
-      title: 'İlaç saati',
-      body:
-          '${profile.schedule.medicationName} dozunuzu alma vakti. '
-          'Her gün aynı saatte almak INR stabilitesi için önemlidir.',
-    );
-  }
-}
-
-/// Ana ekran geri sayım widget'ı.
-/// Her saniye kalan süreyi günceller; ilaç saatine 1 saatten az kaldıysa
-/// vurgu rengine geçer.
-class DoseCountdownWidget extends StatefulWidget {
-  final MedicationSchedule schedule;
-  final VoidCallback? onTakenPressed; // "Aldım" butonu
-
-  const DoseCountdownWidget({
-    super.key,
-    required this.schedule,
-    this.onTakenPressed,
+  /// Haftanın belirli gününde tekrarlayan bildirim (1=Pzt ... 7=Paz).
+  Future<void> scheduleWeekly({
+    required int id,
+    required int weekday,
+    required int hour,
+    required int minute,
+    required String title,
+    required String body,
   });
 
-  @override
-  State<DoseCountdownWidget> createState() => _DoseCountdownWidgetState();
+  /// Tek seferlik bildirim (gün aşırı şema için ileriye dönük olarak
+  /// birkaç tanesi peş peşe planlanır).
+  Future<void> scheduleOnce({
+    required int id,
+    required DateTime at,
+    required String title,
+    required String body,
+  });
+
+  Future<void> cancel(int id);
+
+  /// Bu servise ayrılmış id aralığındaki tüm planlı bildirimleri iptal
+  /// eder — INR uyarıları gibi diğer bildirimlere dokunmaz.
+  Future<void> cancelAllReminders();
 }
 
-class _DoseCountdownWidgetState extends State<DoseCountdownWidget> {
-  late Timer _timer;
-  late Duration _remaining;
+class MedicationReminderService {
+  /// Bu servise ayrılan bildirim id aralığı.
+  static const idRangeStart = 2000;
+  static const idRangeEnd = 8999;
 
-  @override
-  void initState() {
-    super.initState();
-    _remaining = widget.schedule.timeUntilNextDose(DateTime.now());
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      setState(() {
-        _remaining = widget.schedule.timeUntilNextDose(DateTime.now());
-      });
-    });
+  /// Gün aşırı ilaçlar için kaç gün ileriye bildirim planlanacağı.
+  /// (Tekrarlayan bir "gün aşırı" kuralı platformda yok; uygulama her
+  /// açıldığında bu pencere yenilenir.)
+  static const everyOtherDayHorizon = 30;
+
+  final ReminderScheduler _scheduler;
+  final LocProvider _loc;
+
+  MedicationReminderService(this._scheduler, this._loc);
+
+  /// Tüm ilaç planını bildirimlere yansıtır. Önce kendi aralığını
+  /// temizler, sonra yeniden kurar — böylece silinen/düzenlenen ilaçların
+  /// bildirimi ortada kalmaz.
+  Future<void> syncAll(List<Medication> medications, {DateTime? now}) async {
+    await _scheduler.cancelAllReminders();
+    final reference = now ?? DateTime.now();
+    final loc = await _loc();
+
+    var id = idRangeStart;
+    int nextId() {
+      final current = id++;
+      return current > idRangeEnd ? idRangeEnd : current;
+    }
+
+    for (final med in medications) {
+      if (!med.remindersEnabled) continue;
+
+      switch (med.frequency) {
+        case DoseFrequency.daily:
+          for (final time in med.times) {
+            if (time.amountMg <= 0) continue;
+            await _scheduler.scheduleDaily(
+              id: nextId(),
+              hour: time.hour,
+              minute: time.minute,
+              title: loc.l10n.reminderTitle(med.name),
+              body: _body(loc, med, time.amountMg),
+            );
+          }
+
+        case DoseFrequency.specificDays:
+          for (final time in med.times) {
+            if (time.amountMg <= 0) continue;
+            for (final weekday in med.weekdays) {
+              await _scheduler.scheduleWeekly(
+                id: nextId(),
+                weekday: weekday,
+                hour: time.hour,
+                minute: time.minute,
+                title: loc.l10n.reminderTitle(med.name),
+                body: _body(loc, med, time.amountMg),
+              );
+            }
+          }
+
+        case DoseFrequency.weeklyPattern:
+          final time = med.times.isEmpty
+              ? const DoseTime(hour: 19, minute: 0, amountMg: 0)
+              : med.times.first;
+          for (final entry in med.weeklyDoseMg.entries) {
+            if (entry.value <= 0) continue;
+            await _scheduler.scheduleWeekly(
+              id: nextId(),
+              weekday: entry.key,
+              hour: time.hour,
+              minute: time.minute,
+              title: loc.l10n.reminderTitle(med.name),
+              body: _body(loc, med, entry.value),
+            );
+          }
+
+        case DoseFrequency.everyOtherDay:
+          // Platformda "gün aşırı" tekrar kuralı yok: önümüzdeki
+          // [everyOtherDayHorizon] gün için tek tek planlanır.
+          for (var offset = 0; offset < everyOtherDayHorizon; offset++) {
+            final day = DateTime(reference.year, reference.month,
+                    reference.day)
+                .add(Duration(days: offset));
+            for (final slot in med.scheduleFor(day)) {
+              if (!slot.at.isAfter(reference)) continue;
+              await _scheduler.scheduleOnce(
+                id: nextId(),
+                at: slot.at,
+                title: loc.l10n.reminderTitle(med.name),
+                body: _body(loc, med, slot.amountMg),
+              );
+            }
+          }
+      }
+    }
   }
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  String _fmt(Duration d) {
-    final h = d.inHours.toString().padLeft(2, '0');
-    final m = (d.inMinutes % 60).toString().padLeft(2, '0');
-    final s = (d.inSeconds % 60).toString().padLeft(2, '0');
-    return '$h:$m:$s';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final soon = _remaining < const Duration(hours: 1);
-    final scheme = Theme.of(context).colorScheme;
-
-    final onTaken = widget.onTakenPressed;
-    final takenButton = FilledButton(
-      onPressed: onTaken,
-      child: const Text('Aldım'),
-    );
-    // El titremesi olan kullanıcılar için: tek dokunuş sesli okur,
-    // çift dokunuş onaylar (bkz. ui/safe_touch.dart).
-    final safeTakenButton = onTaken == null
-        ? takenButton
-        : SafeTouchButton(
-            announcement: 'Dozunuzu aldıysanız onaylamak için çift dokunun.',
-            onConfirm: onTaken,
-            child: takenButton,
-          );
-
-    return Card(
-      color: soon ? scheme.errorContainer : scheme.primaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Icon(Icons.medication_outlined,
-                size: 36,
-                color: soon ? scheme.error : scheme.primary),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Sonraki doza kalan',
-                      style: Theme.of(context).textTheme.labelMedium),
-                  Text(
-                    _fmt(_remaining),
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium
-                        ?.copyWith(
-                          fontFeatures: const [FontFeature.tabularFigures()],
-                          fontWeight: FontWeight.w700,
-                        ),
-                  ),
-                  Text(
-                    '${widget.schedule.medicationName} • her gün '
-                    '${widget.schedule.hour.toString().padLeft(2, '0')}:'
-                    '${widget.schedule.minute.toString().padLeft(2, '0')}',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
-              ),
-            ),
-            safeTakenButton,
-          ],
-        ),
-      ),
-    );
+  /// Bildirim gövdesi seçili dilde kurulur. Metin planlama anında
+  /// sabitlenir: kullanıcı dili değiştirince `syncAll` yeniden planlar.
+  String _body(Loc loc, Medication med, double mg) {
+    final mgLabel = MedicationLabels.mg(loc, mg);
+    final tablet = med.tabletLabel(loc, mg);
+    final dose =
+        tablet == null ? mgLabel : loc.l10n.doseWithTablets(mgLabel, tablet);
+    return med.isAnticoagulant
+        ? loc.l10n.reminderBodyAnticoagulant(med.name, dose)
+        : loc.l10n.reminderBody(med.name, dose);
   }
 }

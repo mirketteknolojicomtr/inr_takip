@@ -1,0 +1,924 @@
+{
+  "@@locale": "tr",
+  "appTitle": "INR Takip",
+  "tabToday": "Bugün",
+  "tabMedications": "İlaçlarım",
+  "tabHistory": "Geçmiş",
+  "tabProfile": "Profil",
+  "zoneInRange": "Hedefte",
+  "zoneBelowRange": "Hedefin altında",
+  "zoneAboveRange": "Hedefin üstünde",
+  "zoneCriticalLow": "Kritik düşük",
+  "zoneCriticalHigh": "Kritik yüksek",
+  "freqDaily": "Her gün",
+  "freqEveryOtherDay": "Gün aşırı",
+  "freqSpecificDays": "Belirli günler",
+  "freqWeeklyPattern": "Haftalık şema",
+  "freqDailyAt": "Her gün · {times}",
+  "@freqDailyAt": {
+    "placeholders": {
+      "times": {
+        "type": "String"
+      }
+    }
+  },
+  "freqEveryOtherDayAt": "Gün aşırı · {time}",
+  "@freqEveryOtherDayAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "freqSpecificDaysAt": "{days} · {time}",
+  "@freqSpecificDaysAt": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "freqWeeklyPatternAt": "Haftalık şema · {time}",
+  "@freqWeeklyPatternAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "doseMg": "{mg} mg",
+  "@doseMg": {
+    "placeholders": {
+      "mg": {
+        "type": "String"
+      }
+    }
+  },
+  "doseNoneToday": "Bugün doz yok",
+  "doseSummary": "{mg} · {tablets}",
+  "@doseSummary": {
+    "placeholders": {
+      "mg": {
+        "type": "String"
+      },
+      "tablets": {
+        "type": "String"
+      }
+    }
+  },
+  "tabletCount": "{count} tablet",
+  "@tabletCount": {
+    "description": "count bir kesir içerebilir: 1, ½, 1½",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "intakeTaken": "Alındı",
+  "intakeSkipped": "Atlandı",
+  "foodSpinach": "Ispanak",
+  "foodKale": "Kara lahana",
+  "foodChard": "Pazı",
+  "foodParsley": "Maydanoz",
+  "foodBroccoli": "Brokoli",
+  "foodLettuce": "Marul",
+  "foodGreenBeans": "Taze fasulye",
+  "foodGreenTea": "Yeşil çay",
+  "foodOther": "Diğer",
+  "portionSmall": "Az",
+  "portionMedium": "Orta",
+  "portionLarge": "Bol",
+  "alertCriticalLowTitle": "KRİTİK: INR çok düşük",
+  "alertCriticalLowMessage": "INR {value} — pıhtılaşma riski. Lütfen en kısa sürede doktorunuza veya sağlık kuruluşuna ulaşın.",
+  "@alertCriticalLowMessage": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "alertCriticalHighTitle": "KRİTİK: INR çok yüksek",
+  "alertCriticalHighMessage": "INR {value} — kanama riski. Lütfen en kısa sürede doktorunuza veya sağlık kuruluşuna ulaşın.",
+  "@alertCriticalHighMessage": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "alertBelowRangeTitle": "INR hedefin altında",
+  "alertBelowRangeMessage": "INR {value}, hedef aralık {lower}–{upper}. Takip ölçümünüzü planlayın ve doktorunuzu bilgilendirin.",
+  "@alertBelowRangeMessage": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "lower": {
+        "type": "String"
+      },
+      "upper": {
+        "type": "String"
+      }
+    }
+  },
+  "alertAboveRangeTitle": "INR hedefin üstünde",
+  "alertAboveRangeMessage": "INR {value}, hedef aralık {lower}–{upper}. Takip ölçümünüzü planlayın ve doktorunuzu bilgilendirin.",
+  "@alertAboveRangeMessage": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "lower": {
+        "type": "String"
+      },
+      "upper": {
+        "type": "String"
+      }
+    }
+  },
+  "alertInRangeTitle": "Hedef aralıkta",
+  "alertInRangeMessage": "INR {value} hedef aralıkta. Bu düzeni koruyun.",
+  "@alertInRangeMessage": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "alertEdemaTitle": "Olası akut ödem + hedef dışı INR",
+  "alertEdemaMessage": "Son 24 saatte {delta} ani kilo artışı (sıvı birikmesi belirtisi olabilir) kaydedildi ve güncel INR {value} hedef aralığın dışında. Bu bilgiyi doktorunuzla paylaşmanız önerilir.",
+  "@alertEdemaMessage": {
+    "placeholders": {
+      "delta": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderTitle": "{medication} zamanı",
+  "@reminderTitle": {
+    "placeholders": {
+      "medication": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderBodyWithTablets": "{mg} ({tablets})",
+  "@reminderBodyWithTablets": {
+    "placeholders": {
+      "mg": {
+        "type": "String"
+      },
+      "tablets": {
+        "type": "String"
+      }
+    }
+  },
+  "premiumUnlimitedHistory": "Sınırsız geçmiş",
+  "premiumPdfReport": "PDF doktor raporu",
+  "premiumOcrScan": "Kamerayla INR okuma",
+  "premiumCloudSync": "Bulut yedek ve senkron",
+  "premiumHealthSync": "Sağlık uygulaması senkronu",
+  "premiumLockScreenWidget": "Ana ekran widget’ı",
+  "premiumDietInsights": "Diyet–INR içgörüleri",
+  "premiumUnlimitedMedications": "Sınırsız ilaç",
+  "premiumCaregiverSharing": "Yakınla paylaşım",
+  "freeInrLog": "INR ve doz kaydı",
+  "freeMedicationPlan": "İlaç planı: doz, sıklık ve hatırlatıcı",
+  "freeCriticalAlert": "Kritik eşik uyarısı",
+  "freeEmergencyContact": "Acil durum kişisine bildirim",
+  "freeRecentTrend": "Son 30 günün trendi",
+  "freeEmergencyCard": "Acil durum kartı",
+  "emergencyHeadline": "SON INR: {value} ({status})",
+  "@emergencyHeadline": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "emergencyStatusStable": "STABİL",
+  "emergencyStatusAttention": "DİKKAT",
+  "emergencyNoRecord": "INR kaydı yok",
+  "emergencyNdefTitle": "ACİL TIBBİ BİLGİ",
+  "emergencyNdefPatient": "Hasta: {name}",
+  "@emergencyNdefPatient": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "emergencyNdefMedication": "İlaç: {medication} (antikoagülan)",
+  "@emergencyNdefMedication": {
+    "placeholders": {
+      "medication": {
+        "type": "String"
+      }
+    }
+  },
+  "emergencyNdefContact": "Acil kişi: {name} {phone}",
+  "@emergencyNdefContact": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "emergencyNdefStopped": "INR Takip: acil bilgi paylaşımı durduruldu.",
+  "shareSummaryTitle": "{name} — INR durum özeti",
+  "@shareSummaryTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shareSummaryDate": "{date} tarihli",
+  "@shareSummaryDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "shareSummaryLastInr": "Son INR: {value} ({zone}) — {date}",
+  "@shareSummaryLastInr": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "zone": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "shareSummaryTargetRange": "Hedef aralık: {lower}–{upper}",
+  "@shareSummaryTargetRange": {
+    "placeholders": {
+      "lower": {
+        "type": "String"
+      },
+      "upper": {
+        "type": "String"
+      }
+    }
+  },
+  "shareSummaryNoInr": "Henüz INR ölçümü kaydedilmedi.",
+  "shareSummaryTodayDose": "Bugünkü doz: {total} (alınan: {taken})",
+  "@shareSummaryTodayDose": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      },
+      "taken": {
+        "type": "String"
+      }
+    }
+  },
+  "shareSummaryAdherence": "Son 7 gün ilaç uyumu: %{percent} ({taken}/{scheduled} doz)",
+  "@shareSummaryAdherence": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "taken": {
+        "type": "int"
+      },
+      "scheduled": {
+        "type": "int"
+      }
+    }
+  },
+  "shareSummaryFooter": "Bu özet INR Takip uygulamasından gönderildi. Tıbbi karar hekime aittir.",
+  "notificationChannelName": "INR Uyarıları",
+  "notificationChannelDescription": "Kritik/hedef dışı INR değerleri ve ödem riski uyarıları",
+  "reminderChannelName": "İlaç Hatırlatıcıları",
+  "reminderChannelDescription": "İlaç alım saatleriniz için hatırlatma bildirimleri",
+  "reminderBody": "{medication} — {dose}.",
+  "@reminderBody": {
+    "placeholders": {
+      "medication": {
+        "type": "String"
+      },
+      "dose": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderBodyAnticoagulant": "{medication} — {dose}. Her gün aynı saatte almak INR dengesi için önemlidir.",
+  "@reminderBodyAnticoagulant": {
+    "placeholders": {
+      "medication": {
+        "type": "String"
+      },
+      "dose": {
+        "type": "String"
+      }
+    }
+  },
+  "doseWithTablets": "{mg} ({tablets})",
+  "@doseWithTablets": {
+    "placeholders": {
+      "mg": {
+        "type": "String"
+      },
+      "tablets": {
+        "type": "String"
+      }
+    }
+  },
+  "doseSourceToday": "{medication} planınızdan alındı",
+  "@doseSourceToday": {
+    "placeholders": {
+      "medication": {
+        "type": "String"
+      }
+    }
+  },
+  "doseSourceLastDay": "{medication} — son doz gününüzden alındı",
+  "@doseSourceLastDay": {
+    "placeholders": {
+      "medication": {
+        "type": "String"
+      }
+    }
+  },
+  "vitaminKEntrySubtitle": "{date} · {portion} porsiyon · K yükü {load}",
+  "@vitaminKEntrySubtitle": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "portion": {
+        "type": "String"
+      },
+      "load": {
+        "type": "String"
+      }
+    }
+  },
+  "vitaminKDeleteTooltip": "{name} kaydını sil",
+  "@vitaminKDeleteTooltip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dietInsightText": "INR {delta} puan düştü. Önceki 3 günde yüksek K vitamini alımı kaydedilmiş: {foods}. Bu bilgiyi doktorunuzla paylaşabilirsiniz.",
+  "@dietInsightText": {
+    "placeholders": {
+      "delta": {
+        "type": "String"
+      },
+      "foods": {
+        "type": "String"
+      }
+    }
+  },
+  "doseFieldLabel": "O günkü doz",
+  "doseFieldHelper": "İlaç planı eklerseniz burası kendiliğinden dolar",
+  "planWeekly": "Haftalık",
+  "planMonthly": "Aylık",
+  "planTwoMonth": "2 aylık",
+  "planThreeMonth": "3 aylık",
+  "planSixMonth": "6 aylık",
+  "planAnnual": "Yıllık",
+  "planLifetime": "Ömür boyu",
+  "periodWeek": "hafta",
+  "periodMonth": "ay",
+  "periodTwoMonths": "2 ay",
+  "periodThreeMonths": "3 ay",
+  "periodSixMonths": "6 ay",
+  "periodYear": "yıl",
+  "periodOneTime": "tek seferlik",
+  "savingBadge": "%{percent} tasarruf",
+  "@savingBadge": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "purchaseStoreUnavailable": "Mağaza bağlantısı kurulamadı.",
+  "purchasePlanNotFound": "Seçilen plan mağazada bulunamadı.",
+  "purchaseCompleted": "Aboneliğiniz aktif. Teşekkürler!",
+  "purchaseNotCompleted": "Satın alma tamamlanamadı. Lütfen tekrar deneyin.",
+  "purchasePendingApproval": "Ödeme onay bekliyor. Onaylanınca premium açılacak.",
+  "purchaseAlreadyActive": "Bu abonelik zaten aktif.",
+  "purchaseNoConnection": "İnternet bağlantısı kurulamadı.",
+  "purchaseNotAllowed": "Bu cihazda satın alma izni yok (ör. ebeveyn kontrolü açık olabilir).",
+  "restoreCompleted": "Aboneliğiniz geri yüklendi.",
+  "restoreNothingFound": "Bu hesapta aktif abonelik bulunamadı.",
+  "restoreFailed": "Geri yükleme tamamlanamadı.",
+  "paywallHeadline": "Takibi kolaylaştıran her şey",
+  "paywallSubtitle": "Güvenlik özellikleri ücretsiz kalır; premium yalnızca kolaylıkları açar. Güvenlik uyarıları her zaman ücretsizdir.",
+  "paywallTrialCta": "{days} gün ücretsiz dene",
+  "@paywallTrialCta": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallCta": "Premium’a geç",
+  "paywallRestore": "Satın alımları geri yükle",
+  "paywallFeatureIsPremium": "“{feature}” premium bir özellik.",
+  "@paywallFeatureIsPremium": {
+    "placeholders": {
+      "feature": {
+        "type": "String"
+      }
+    }
+  },
+  "paywallPdfSubtitle": "3, 6 veya 12 aylık INR ve doz tablosu, tek dokunuşla.",
+  "paywallHistorySubtitle": "Ücretsizde son 30 gün; premium ile tüm takip geçmişiniz.",
+  "paywallCloudTitle": "Bulut yedek ve çoklu cihaz",
+  "paywallCloudSubtitle": "Telefon değişse de kayıtlarınız kaybolmaz.",
+  "paywallOcrSubtitle": "Cihaz ekranındaki değeri elle yazmadan kaydedin.",
+  "paywallDietSubtitle": "Hangi beslenmenin INR’yi düşürdüğünü görün.",
+  "paywallMedsSubtitle": "Ücretsizde 2 ilaç; premium ile tüm tedavi listeniz.",
+  "paywallWidgetSubtitle": "Sonraki doz ve güncel INR, telefonu açmadan.",
+  "paywallAlwaysFreeTitle": "Bunlar her zaman ücretsiz",
+  "paywallTrialBadge": "{days} gün ücretsiz",
+  "@paywallTrialBadge": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallPerMonth": "aylık {price}",
+  "@paywallPerMonth": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "paywallPlansErrorTitle": "Planlar yüklenemedi",
+  "paywallPlansErrorMessage": "Mağaza bağlantısı kurulamadı. İnternet bağlantınızı kontrol edip tekrar deneyin.",
+  "paywallLifetimeTerms": "Tek seferlik ödemedir, yenilenmez.",
+  "paywallSubscriptionTerms": "Abonelik, dönem bitiminden en az 24 saat önce iptal edilmezse otomatik yenilenir. İptali cihazınızın mağaza ayarlarından yapabilirsiniz.",
+  "paywallTerms": "Kullanım Koşulları",
+  "paywallPrivacy": "Gizlilik Politikası",
+  "paywallMedicalDisclaimer": "INR Takip tıbbi tavsiye vermez; kayıtlarınızı düzenli tutmanıza yardımcı olur. Doz değişikliğini yalnızca hekiminiz yapar.",
+  "retry": "Tekrar dene",
+  "cancel": "İptal",
+  "save": "Kaydet",
+  "delete": "Sil",
+  "close": "Kapat",
+  "pdfTitle": "INR Takip Raporu",
+  "pdfHeaderLine": "Hasta: {name}   |   Hedef aralık: {lower}–{upper}   |   Dönem: {from} – {to}",
+  "@pdfHeaderLine": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "lower": {
+        "type": "String"
+      },
+      "upper": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfSummaryLine": "Toplam ölçüm: {count}   •   Hedef aralıkta kalma: %{percent}",
+  "@pdfSummaryLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfColumnDate": "Tarih",
+  "pdfColumnInr": "INR",
+  "pdfColumnDose": "Doz (mg/gün)",
+  "pdfColumnStatus": "Durum",
+  "pdfColumnNote": "Not",
+  "pdfDisclaimer": "Bu rapor hasta tarafından girilen verilerle oluşturulmuştur; tıbbi karar için hekim değerlendirmesi esastır.",
+  "pdfFileName": "inr_raporu.pdf",
+  "chartNoData": "Son 30 günde kayıt yok",
+  "unlockWithPremium": "Premium ile aç",
+  "measuredToday": "bugün ölçüldü",
+  "measuredYesterday": "dün ölçüldü",
+  "measuredDaysAgo": "{days} gün önce ölçüldü",
+  "@measuredDaysAgo": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "cameraPreparing": "Kamera hazırlanıyor…",
+  "cameraFailedTitle": "Kamera açılamadı",
+  "cameraFailedMessage": "Kamera izni verilmemiş olabilir ya da bu cihazda kamera kullanılamıyor. INR değerini elle de girebilirsiniz.",
+  "measurementDialogTitle": "Yeni INR ölçümü",
+  "inrFieldLabel": "INR değeri",
+  "inrFieldHint": "Örn. 2,5",
+  "inrOutOfBounds": "INR değeri 0–20 arasında olmalı.",
+  "doseInvalid": "Geçerli bir doz girin.",
+  "vitaminKDialogTitle": "K vitamini öğünü",
+  "vitaminKWhatQuestion": "Ne yediniz?",
+  "vitaminKPortionLabel": "Porsiyon",
+  "vitaminKWhenQuestion": "Ne zaman?",
+  "vitaminKDatePickerHelp": "Öğün tarihi",
+  "vitaminKFoodNameLabel": "Gıda adı",
+  "vitaminKFoodNameHint": "Örn. Semizotu",
+  "vitaminKFoodNameRequired": "Gıdanın adını yazın.",
+  "dateToday": "Bugün",
+  "dateYesterday": "Dün",
+  "todayNoMedicationTitle": "İlaç planı yok",
+  "todayNoMedicationMessage": "Kan sulandırıcınızı ekleyin; dozu ve sıklığı burada görünsün, saatinde hatırlatalım.",
+  "todayAddMedication": "İlaç ekle",
+  "todayCurrentInr": "Güncel INR",
+  "todayTargetRange": "Hedef aralık {lower}–{upper}",
+  "@todayTargetRange": {
+    "placeholders": {
+      "lower": {
+        "type": "String"
+      },
+      "upper": {
+        "type": "String"
+      }
+    }
+  },
+  "todayNoMeasurementTitle": "Henüz ölçüm yok",
+  "todayNoMeasurementMessage": "İlk INR değerinizi girin; hedef aralığa göre durumunuzu ve trendi burada gösterelim.",
+  "todayAddMeasurement": "Ölçüm ekle",
+  "todayMedicationsTitle": "Bugünün ilaçları",
+  "todayMedicationsSubtitle": "{count} alım · toplam {total}",
+  "@todayMedicationsSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "todayEditPlan": "Planı düzenle",
+  "todayDisclaimer": "INR Takip tıbbi tavsiye vermez. Doz değişikliğini yalnızca hekiminiz yapar.",
+  "greetingMorning": "Günaydın",
+  "greetingDay": "İyi günler",
+  "greetingEvening": "İyi akşamlar",
+  "todayAllDoneTitle": "Bugünün dozları tamam",
+  "todayAllDoneSubtitle": "Toplam {total} alındı.",
+  "@todayAllDoneSubtitle": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "zoneNoteInRange": "Değeriniz hedef aralıkta. Dozunuzu ve beslenmenizi aynı düzende sürdürün.",
+  "zoneNoteBelow": "Hedefin altında — pıhtı riski artabilir. Kontrol tarihinizi kaçırmayın.",
+  "zoneNoteAbove": "Hedefin üstünde — kanama riski artabilir. Yeni bir morarma/kanama olursa hekiminizi arayın.",
+  "zoneNoteCriticalLow": "Kritik düşük ({threshold}). Hekiminizle bugün iletişime geçin.",
+  "@zoneNoteCriticalLow": {
+    "placeholders": {
+      "threshold": {
+        "type": "String"
+      }
+    }
+  },
+  "zoneNoteCriticalHigh": "Kritik yüksek ({threshold}). Hekiminizle bugün iletişime geçin.",
+  "@zoneNoteCriticalHigh": {
+    "placeholders": {
+      "threshold": {
+        "type": "String"
+      }
+    }
+  },
+  "medsTitle": "İlaç planım",
+  "medsSubtitle": "Doz ve sıklık — dokunarak düzenleyin",
+  "medsAdd": "İlaç ekle",
+  "medsEmptyTitle": "Henüz ilaç eklemediniz",
+  "medsEmptyMessage": "Kan sulandırıcınızı ekleyin; dozunu, sıklığını ve hatırlatmasını buradan yönetin.",
+  "medsEmptyAction": "İlk ilacı ekle",
+  "medsAdherenceTitle": "Son 7 günlük uyum",
+  "medsAdherenceDetail": "{taken}/{scheduled} doz alındı",
+  "@medsAdherenceDetail": {
+    "placeholders": {
+      "taken": {
+        "type": "int"
+      },
+      "scheduled": {
+        "type": "int"
+      }
+    }
+  },
+  "medsAdherenceMissed": " · {missed} kaçırıldı",
+  "@medsAdherenceMissed": {
+    "placeholders": {
+      "missed": {
+        "type": "int"
+      }
+    }
+  },
+  "medsLimitTitle": "Daha fazla ilaç ekleyin",
+  "medsLimitMessage": "Ücretsiz sürümde {count} ilaç takip edilebilir. Premium ile tüm tedavi listenizi tek yerde tutun.",
+  "@medsLimitMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "doseTake": "Aldım",
+  "doseOverdue": "Doz saati geçti",
+  "doseCountdown": "Sonraki doza kalan",
+  "doseConfirmAnnouncement": "{medication}, {amount}. Aldıysanız onaylamak için çift dokunun.",
+  "@doseConfirmAnnouncement": {
+    "placeholders": {
+      "medication": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "doseSkip": "Bu dozu atladım",
+  "doseTodayTotal": "Bugünün toplamı: {total}",
+  "@doseTodayTotal": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "doseTakenTotal": "{total} alındı",
+  "@doseTakenTotal": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "doseTakeTooltip": "{medication} dozunu aldım",
+  "@doseTakeTooltip": {
+    "placeholders": {
+      "medication": {
+        "type": "String"
+      }
+    }
+  },
+  "doseUndoTooltip": "İşareti geri al",
+  "weeklyStripTitle": "{medication} — haftalık şema",
+  "@weeklyStripTitle": {
+    "placeholders": {
+      "medication": {
+        "type": "String"
+      }
+    }
+  },
+  "weeklyStripDayLabel": "{day}: {amount}",
+  "@weeklyStripDayLabel": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "weeklyStripNoDose": "ilaç yok",
+  "anticoagulantBadge": "Kan sulandırıcı",
+  "doseSummaryToday": "{summary}  ·  bugün",
+  "@doseSummaryToday": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "doseStateLate": "Gecikti",
+  "doseStateWaiting": "Bekliyor",
+  "historyReportFailed": "Rapor oluşturulamadı.",
+  "historyEmptyTitle": "Bu dönemde kayıt yok",
+  "historyEmptyMessage": "INR ölçümü ekledikçe trend grafiği burada oluşur.",
+  "historyReportTitle": "Doktor raporu",
+  "historyReportSubtitle": "Vizit için PDF özet",
+  "historyReportPreparing": "Hazırlanıyor…",
+  "historyReportShare": "PDF raporu paylaş",
+  "historyMeasurements": "Ölçümler",
+  "historyRecordCount": "{count} kayıt",
+  "@historyRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historyDisclaimer": "Rapor, girdiğiniz verilerle oluşturulur; tıbbi karar hekiminize aittir.",
+  "windowDays": "{days} gün",
+  "@windowDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "windowMonths": "{months} ay",
+  "@windowMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "windowYear": "1 yıl",
+  "inRangeTitle": "Hedef aralıkta kalma",
+  "inRangeGood": "İyi bir denge — bu düzeni koruyun.",
+  "inRangePoor": "Hekiminiz doz ayarı yapmak isteyebilir; bu oranı vizitte paylaşın.",
+  "vitaminKJournalTitle": "K vitamini günlüğü",
+  "vitaminKJournalEmptyHint": "Ispanak, brokoli gibi öğünleri kaydedin",
+  "vitaminKJournalSummary": "{count} öğün · toplam yük {load}",
+  "@vitaminKJournalSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "load": {
+        "type": "String"
+      }
+    }
+  },
+  "vitaminKAddMeal": "Öğün ekle",
+  "dietLockTitle": "K vitamini – INR içgörüsü",
+  "dietLockDescription": "Hangi öğünlerden sonra INR’nizin düştüğünü görün. Ispanak, brokoli gibi K vitamini yüksek gıdalarla değer değişimini eşleştirir.",
+  "dietEmptyTitle": "Henüz bir ilişki bulunamadı",
+  "dietEmptyMessage": "K vitamini yüksek öğünlerinizi kaydettikçe, INR düşüşleriyle bağlantı burada görünür.",
+  "dietInsightsTitle": "K vitamini – INR içgörüleri",
+  "entryRowSubtitle": "{dose} mg/gün · {zone}",
+  "@entryRowSubtitle": {
+    "placeholders": {
+      "dose": {
+        "type": "String"
+      },
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "authSignUpTitle": "Hesap Oluştur",
+  "authSignInTitle": "Giriş Yap",
+  "authEmailInvalid": "Geçerli bir e-posta girin",
+  "authPasswordTooShort": "En az 6 karakter olmalı",
+  "authSignUpAction": "Kayıt Ol",
+  "authSignInAction": "Giriş Yap",
+  "authHaveAccount": "Zaten hesabım var, giriş yap",
+  "authNoAccount": "Hesabım yok, kayıt ol",
+  "authErrorInvalidEmail": "Geçersiz e-posta adresi.",
+  "authErrorUserDisabled": "Bu hesap devre dışı bırakılmış.",
+  "authErrorUserNotFound": "Bu e-posta ile kayıtlı bir hesap bulunamadı.",
+  "authErrorWrongPassword": "E-posta veya parola hatalı.",
+  "authErrorEmailInUse": "Bu e-posta zaten kayıtlı. Giriş yapmayı deneyin.",
+  "authErrorWeakPassword": "Parola çok zayıf (en az 6 karakter).",
+  "authErrorNotEnabled": "E-posta/parola girişi Firebase Console’da henüz etkinleştirilmemiş.",
+  "authErrorGeneric": "Beklenmeyen bir hata oluştu.",
+  "emailLabel": "E-posta",
+  "passwordLabel": "Parola",
+  "shareDraftReady": "Özet hazırlandı — göndermek için Mesajlar uygulamasında “Gönder”e dokunun.",
+  "shareNoContact": "Önce bu ekrandan acil durum kişisi ve telefonunu kaydedin.",
+  "shareUnavailable": "Bu cihazda mesaj gönderebilecek bir uygulama bulunamadı.",
+  "edemaScanNoRisk": "Ödem taraması: risk bulunamadı.",
+  "edemaScanRisk": "Risk tespit edildi: {delta} artış + hedef dışı INR.",
+  "@edemaScanRisk": {
+    "placeholders": {
+      "delta": {
+        "type": "String"
+      }
+    }
+  },
+  "edemaScanTooltip": "Ödem taraması",
+  "scanInrTooltip": "Kamerayla INR oku",
+  "bootstrapFailed": "Uygulama başlatılamadı",
+  "languageSectionTitle": "Dil",
+  "languageSectionSubtitle": "Uygulama dili ve sayı/tarih biçimi",
+  "languageSystemDefault": "Cihaz dili",
+  "profilePatientSection": "Hasta",
+  "profileNameLabel": "Ad Soyad",
+  "profileTargetTitle": "Hedef INR aralığı",
+  "profileTargetSubtitle": "Hekiminizin sizin için belirlediği aralık",
+  "profileLowerBound": "Alt sınır",
+  "profileUpperBound": "Üst sınır",
+  "profileCriticalTitle": "Kritik eşikler",
+  "profileCriticalSubtitle": "Bu değerler aşılınca acil uyarı verilir",
+  "profileCriticalLow": "Kritik düşük",
+  "profileCriticalHigh": "Kritik yüksek",
+  "profileClotRisk": "Pıhtı riski",
+  "profileBleedRisk": "Kanama riski",
+  "profileContactTitle": "Acil durum kişisi",
+  "profileContactSubtitle": "Kritik değerde bilgilendirilir",
+  "profileContactPhone": "Telefon",
+  "profileSmsToggle": "Kritik değerde SMS gönder",
+  "profileSaveChanges": "Değişiklikleri kaydet",
+  "profileSignOut": "Çıkış yap",
+  "profileInvalidNumber": "Geçersiz sayı",
+  "profileRangeOrderError": "Hedef alt sınır, üst sınırdan küçük olmalı.",
+  "profileThresholdError": "Kritik eşikler hedef aralığın dışında olmalı (kritik düşük < {lower}, kritik yüksek > {upper}).",
+  "@profileThresholdError": {
+    "placeholders": {
+      "lower": {
+        "type": "String"
+      },
+      "upper": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionFreeTitle": "Ücretsiz sürüm",
+  "subscriptionFreeMessage": "PDF rapor, bulut yedek ve sınırsız geçmiş için premium’a geçin.",
+  "subscriptionTrialTitle": "Deneme sürümü",
+  "subscriptionLifetime": "Ömür boyu erişim",
+  "subscriptionCancelled": "Aboneliğiniz iptal edilmiş. Bu tarihe kadar premium özellikler açık kalır.",
+  "subscriptionManage": "Aboneliği yönet",
+  "caregiverShareTitle": "Yakınla paylaşım",
+  "caregiverShareDescription": "Son INR değerinizi, bugünkü dozunuzu ve ilaç uyum oranınızı tek dokunuşla yakınınıza gönderin. Uzaktaki bir çocuğunuz ya da bakıcınız durumunuzu düzenli takip edebilir.",
+  "caregiverSharePreparing": "Hazırlanıyor…",
+  "caregiverShareAction": "Durumumu yakınıma gönder",
+  "editorDoseAmountTitle": "Doz miktarı",
+  "editorNameRequired": "İlaç adı zorunlu.",
+  "editorWeeklyNeedsDose": "Haftalık şemada en az bir güne doz girin.",
+  "editorNeedsTime": "En az bir alım saati ekleyin.",
+  "editorNeedsAmount": "En az bir saat için doz miktarı girin.",
+  "editorNeedsDay": "En az bir gün seçin.",
+  "editorDeleteWarning": "İlaç planı ve bu ilaca ait alım kayıtları silinir. INR ölçümleriniz etkilenmez.",
+  "editorDiscard": "Vazgeç",
+  "editorEditTitle": "İlacı düzenle",
+  "editorAddTitle": "İlaç ekle",
+  "editorMedicationSection": "İlaç",
+  "editorNameLabel": "İlaç adı",
+  "editorNameHint": "Örn. Coumadin",
+  "editorStrengthLabel": "Tablet gücü (opsiyonel)",
+  "editorStrengthHelper": "Girilirse doz “1 tablet”, “½ tablet” olarak da gösterilir.",
+  "editorAnticoagulantToggle": "Kan sulandırıcı (INR’yi etkiler)",
+  "editorAnticoagulantConflict": "Zaten bir kan sulandırıcı işaretli. Genelde tek antikoagülan kullanılır — hekiminize danışın.",
+  "editorAnticoagulantHelp": "Ana ekranda öne çıkar ve INR kaydında doz olarak önerilir.",
+  "editorFrequencySection": "Sıklık",
+  "editorFrequencySubtitle": "İlacın hangi günlerde alınacağı",
+  "editorStartDay": "Başlangıç günü",
+  "editorStartDayHelp": "Gün aşırı sayımı bu günden başlar",
+  "editorAmountSubtitle": "Her alımda kaç mg",
+  "editorOtherSection": "Diğer",
+  "editorReminderToggle": "Hatırlatma bildirimi",
+  "editorReminderHelp": "Alım saatinde doz bilgisiyle bildirim",
+  "editorNoteHint": "Örn. aç karnına",
+  "freqDailyHelp": "Aynı doz, her gün",
+  "freqEveryOtherDayHelp": "Bir gün al, bir gün ara ver",
+  "freqSpecificDaysHelp": "Seçtiğiniz günlerde, aynı doz",
+  "freqWeeklyPatternHelp": "Her gün farklı doz (warfarin şeması)",
+  "editorRemoveTime": "Bu saati kaldır",
+  "editorAddTime": "Alım saati ekle",
+  "editorTimeTitle": "Alım saati",
+  "editorTimeHelp": "Her gün aynı saatte",
+  "editorWeeklyTotal": "Haftalık toplam: {total}",
+  "@editorWeeklyTotal": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "editorAmountLabel": "Miktar (mg)",
+  "ok": "Tamam",
+  "editorDeleteTitle": "{medication} silinsin mi?",
+  "@editorDeleteTitle": {
+    "placeholders": {
+      "medication": {
+        "type": "String"
+      }
+    }
+  },
+  "editorDoseSection": "Doz",
+  "editorNoteLabel": "Not (opsiyonel)"
+}

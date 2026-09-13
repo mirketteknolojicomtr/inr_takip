@@ -6,30 +6,30 @@ library;
 /// Yaygın yüksek K vitaminli gıdalar için hazır katalog.
 /// [relativeK] 1-5 arası göreli yük puanıdır (5 = çok yüksek).
 enum VitaminKFood {
-  spinach('Ispanak', 5),
-  kale('Kara lahana', 5),
-  chard('Pazı', 5),
-  parsley('Maydanoz', 4),
-  broccoli('Brokoli', 3),
-  lettuce('Marul', 3),
-  greenBeans('Taze fasulye', 2),
-  greenTea('Yeşil çay', 2),
-  other('Diğer', 1);
+  spinach(5),
+  kale(5),
+  chard(5),
+  parsley(4),
+  broccoli(3),
+  lettuce(3),
+  greenBeans(2),
+  greenTea(2),
+  other(1);
 
-  final String labelTr;
+  /// 1-5 arası göreli K vitamini yükü (5 = çok yüksek).
+  /// Ad çeviri katmanından gelir (bkz. l10n/domain_labels.dart).
   final int relativeK;
-  const VitaminKFood(this.labelTr, this.relativeK);
+  const VitaminKFood(this.relativeK);
 }
 
 /// Porsiyon büyüklüğü çarpanı.
 enum PortionSize {
-  small(0.5, 'Az'),
-  medium(1.0, 'Orta'),
-  large(1.5, 'Bol');
+  small(0.5),
+  medium(1.0),
+  large(1.5);
 
   final double factor;
-  final String labelTr;
-  const PortionSize(this.factor, this.labelTr);
+  const PortionSize(this.factor);
 }
 
 class VitaminKLog {
@@ -49,9 +49,6 @@ class VitaminKLog {
 
   /// Bu öğünün göreli K vitamini yükü.
   double get kLoad => food.relativeK * portion.factor;
-
-  String get displayName =>
-      food == VitaminKFood.other ? (customName ?? 'Diğer') : food.labelTr;
 
   Map<String, dynamic> toJson() => {
         'id': id,

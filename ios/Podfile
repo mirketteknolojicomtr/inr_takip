@@ -29,7 +29,8 @@ require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelpe
 flutter_ios_podfile_setup
 
 target 'Runner' do
-  use_frameworks!
+  use_frameworks! :linkage => :static
+
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'RunnerTests' do
@@ -40,24 +41,32 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
-
-    # MLImage does not have an arm64 slice for the simulator.
-    # We must explicitly exclude arm64 for the simulator in all Pods.
     target.build_configurations.each do |config|
-      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.5'
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = ''
     end
   end
 
-  # We must ALSO exclude arm64 for the simulator in the Runner project,
-  # otherwise the Runner will build for arm64 and fail to link against the x86_64 Pods.
-  user_project = installer.aggregate_targets.first.user_project
-  user_project.build_configurations.each do |config|
-    config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
+  installer.aggregate_targets.each do |target|
+    target.user_project.build_configurations.each do |config|
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = ''
+    end
+    target.user_project.targets.each do |t|
+      t.build_configurations.each do |config|
+        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = ''
+      end
+    end
+    target.user_project.save
   end
-  user_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
+
+  xcconfig_files = Dir.glob(File.join(__dir__, 'Pods', 'Target Support Files', '**', '*.xcconfig'))
+  xcconfig_files.each do |file|
+    content = File.read(file)
+    if content.include?('EXCLUDED_ARCHS')
+      new_content = content.lines.reject { |line| line.include?('EXCLUDED_ARCHS') }.join
+      File.write(file, new_content)
     end
   end
-  user_project.save
 end
+
+

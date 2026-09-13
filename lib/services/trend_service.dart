@@ -51,19 +51,17 @@ class DietInsight {
   final DateTime inrDate;
   final double inrDelta; // önceki ölçüme göre değişim
   final double kLoadBefore; // ölçümden önceki 72 saatteki toplam K yükü
-  final List<String> foods;
+  /// İlişkilendirilen öğünler. Metin değil kayıt tutulur: gıda adı
+  /// çeviriden gelir, kullanıcının yazdığı serbest ad ise olduğu gibi
+  /// kalır (bkz. l10n/domain_labels.dart `dietInsightMessage`).
+  final List<VitaminKLog> logs;
 
   const DietInsight({
     required this.inrDate,
     required this.inrDelta,
     required this.kLoadBefore,
-    required this.foods,
+    required this.logs,
   });
-
-  String get messageTr =>
-      'INR ${inrDelta.toStringAsFixed(1)} puan düştü. Önceki 3 günde yüksek '
-      'K vitamini alımı kaydedilmiş: ${foods.join(", ")}. '
-      'Bu bilgiyi doktorunuzla paylaşabilirsiniz.';
 }
 
 class TrendService {
@@ -145,7 +143,7 @@ class TrendService {
           inrDate: curr.date,
           inrDelta: delta,
           kLoadBefore: totalK,
-          foods: windowLogs.map((l) => l.displayName).toSet().toList(),
+          logs: windowLogs,
         ));
       }
     }

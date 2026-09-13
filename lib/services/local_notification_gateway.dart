@@ -12,18 +12,30 @@ import 'alert_service.dart';
 
 class LocalNotificationGateway implements NotificationGateway {
   static const _channelId = 'inr_alerts';
-  static const _channelName = 'INR Uyarıları';
-  static const _channelDescription =
-      'Kritik/hedef dışı INR değerleri ve ödem riski uyarıları';
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
+  final LocProvider _loc;
+
+  LocalNotificationGateway(this._loc);
 
   bool _initialized = false;
+
+  /// Android kanal adı sistem ayarlarında görünür; kullanıcının dilinde
+  /// olmalı. Kanal bir kez oluşturulur — dil sonradan değişirse ad eski
+  /// dilde kalır, bu Android'in bilinen bir kısıtıdır (kanal yeniden
+  /// adlandırmak için silinip yeniden kurulması gerekir ve bu, kullanıcının
+  /// kanal ayarlarını sıfırlar; ada göre sıfırlamak daha kötü bir takas).
+  String _channelName = 'INR';
+  String _channelDescription = '';
 
   /// Uygulama açılışında bir kez çağrılmalı (ör. main.dart initState).
   Future<void> initialize() async {
     if (_initialized) return;
+
+    final loc = await _loc();
+    _channelName = loc.l10n.notificationChannelName;
+    _channelDescription = loc.l10n.notificationChannelDescription;
 
     const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosInit = DarwinInitializationSettings();
@@ -44,15 +56,19 @@ class LocalNotificationGateway implements NotificationGateway {
   }
 
   @override
-  Future<void> showLocalAlert(InrAlert alert) async {
+  Future<void> showLocalAlert({
+    required String title,
+    required String body,
+    required AlertSeverity severity,
+  }) async {
     if (!_initialized) await initialize();
 
-    final importance = switch (alert.severity) {
+    final importance = switch (severity) {
       AlertSeverity.critical => Importance.max,
       AlertSeverity.warning => Importance.high,
       AlertSeverity.info => Importance.defaultImportance,
     };
-    final priority = switch (alert.severity) {
+    final priority = switch (severity) {
       AlertSeverity.critical => Priority.max,
       AlertSeverity.warning => Priority.high,
       AlertSeverity.info => Priority.defaultPriority,
@@ -65,7 +81,7 @@ class LocalNotificationGateway implements NotificationGateway {
         channelDescription: _channelDescription,
         importance: importance,
         priority: priority,
-        styleInformation: BigTextStyleInformation(alert.messageTr),
+        styleInformation: BigTextStyleInformation(body),
       ),
       iOS: const DarwinNotificationDetails(
         interruptionLevel: InterruptionLevel.timeSensitive,
@@ -75,6 +91,6 @@ class LocalNotificationGateway implements NotificationGateway {
     // id: aynı anda tek bir kritik uyarı yeterli; her seferinde aynı id ile
     // üst üste yazmak yerine zaman damgasına göre benzersizleştiriyoruz.
     final id = DateTime.now().millisecondsSinceEpoch.remainder(1 << 31);
-    await _plugin.show(id, alert.titleTr, alert.messageTr, details);
+    await _plugin.show(id, title, body, details);
   }
 }

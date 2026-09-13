@@ -1,4 +1,4 @@
-package com.example.inr_takip
+package com.mirketteknoloji.inrtakip
 
 import android.content.Context
 import androidx.compose.ui.graphics.Color

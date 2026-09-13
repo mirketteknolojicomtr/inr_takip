@@ -16,19 +16,51 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../models/patient_profile.dart';
 import 'alert_service.dart';
+import 'caregiver_share_service.dart';
+
+/// SAF FONKSİYON: platforma uygun `sms:` URI'sini kurar.
+///
+/// iOS'ta body parametresi "&" ile başlar (standart "?" Android içindir);
+/// Apple'ın dokümante etmediği ama uzun süredir kabul ettiği bir kısayoldur.
+/// Kritik uyarı ve yakınla paylaşım aynı kuralı kullanmalı — bu yüzden tek
+/// yerde tutuluyor.
+Uri buildSmsUri({
+  required String phone,
+  required String body,
+  bool isIOS = false,
+}) {
+  final separator = isIOS ? '&' : '?';
+  return Uri.parse('sms:$phone$separator' 'body=${Uri.encodeComponent(body)}');
+}
+
+/// Mesajlar uygulamasını önceden doldurulmuş metinle açar.
+/// Açılamazsa `false` döner — çağıran kullanıcıyı bilgilendirebilir.
+Future<bool> launchSmsDraft({
+  required String phone,
+  required String body,
+}) async {
+  final uri = buildSmsUri(phone: phone, body: body, isIOS: Platform.isIOS);
+  if (!await canLaunchUrl(uri)) return false;
+  return launchUrl(uri, mode: LaunchMode.externalApplication);
+}
 
 class SmsEmergencyGateway implements EmergencyGateway {
   @override
-  Future<void> notifyContact(EmergencyContact contact, InrAlert alert) async {
-    final body = Uri.encodeComponent('${alert.titleTr}\n${alert.messageTr}');
-    // iOS'ta sms: URI'sinde body parametresi "&" ile başlar (standart "?"
-    // Android içindir); Apple'ın dokümante etmediği ama uzun süredir kabul
-    // ettiği bir kısayoldur.
-    final separator = Platform.isIOS ? '&' : '?';
-    final uri = Uri.parse('sms:${contact.phone}$separator' 'body=$body');
-
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
+  Future<void> notifyContact(
+    EmergencyContact contact, {
+    required String title,
+    required String body,
+  }) async {
+    await launchSmsDraft(phone: contact.phone, body: '$title\n$body');
   }
+}
+
+/// Yakınla paylaşımın SMS implementasyonu — kritik uyarıyla aynı
+/// `sms:` yolunu kullanır (bkz. [launchSmsDraft]).
+class SmsCaregiverShareGateway implements CaregiverShareGateway {
+  const SmsCaregiverShareGateway();
+
+  @override
+  Future<bool> share({required String phone, required String text}) =>
+      launchSmsDraft(phone: phone, body: text);
 }

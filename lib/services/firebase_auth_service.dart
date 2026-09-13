@@ -1,6 +1,6 @@
 /// Firebase Authentication (e-posta/parola) sarmalayıcısı.
 /// Çok cihazlı senkron için: profil Firestore'da bu kullanıcının UID'si
-/// altında saklanır (bkz. firestore_profile_sync_service.dart).
+/// altında saklanır (bkz. cloud_sync_service.dart).
 library;
 
 import 'package:firebase_auth/firebase_auth.dart';

@@ -7,6 +7,8 @@ library;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/domain_labels.dart';
+
 import '../services/firebase_auth_service.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -34,16 +36,20 @@ class _AuthScreenState extends State<AuthScreen> {
     super.dispose();
   }
 
-  String _describeError(FirebaseAuthException e) => switch (e.code) {
-        'invalid-email' => 'Geçersiz e-posta adresi.',
-        'user-disabled' => 'Bu hesap devre dışı bırakılmış.',
-        'user-not-found' => 'Bu e-posta ile kayıtlı bir hesap bulunamadı.',
-        'wrong-password' || 'invalid-credential' => 'E-posta veya parola hatalı.',
-        'email-already-in-use' => 'Bu e-posta zaten kayıtlı. Giriş yapmayı deneyin.',
-        'weak-password' => 'Parola çok zayıf (en az 6 karakter).',
-        'operation-not-allowed' =>
-          'E-posta/parola girişi Firebase Console\'da henüz etkinleştirilmemiş.',
-        _ => 'Bir hata oluştu: ${e.message ?? e.code}',
+  /// Firebase hata kodunu kullanıcının dilindeki cümleye çevirir.
+  /// Tanınmayan kod için genel mesaj verilir — ham SDK metni İngilizcedir
+  /// ve kullanıcıya gösterilmez.
+  String _describeError(Loc loc, FirebaseAuthException e) => switch (e.code) {
+        'invalid-email' => loc.l10n.authErrorInvalidEmail,
+        'user-disabled' => loc.l10n.authErrorUserDisabled,
+        'user-not-found' => loc.l10n.authErrorUserNotFound,
+        'wrong-password' ||
+        'invalid-credential' =>
+          loc.l10n.authErrorWrongPassword,
+        'email-already-in-use' => loc.l10n.authErrorEmailInUse,
+        'weak-password' => loc.l10n.authErrorWeakPassword,
+        'operation-not-allowed' => loc.l10n.authErrorNotEnabled,
+        _ => loc.l10n.authErrorGeneric,
       };
 
   Future<void> _submit() async {
@@ -68,9 +74,11 @@ class _AuthScreenState extends State<AuthScreen> {
       }
       // Başarılıysa authStateChanges tetiklenir, main.dart yönlendirir.
     } on FirebaseAuthException catch (e) {
-      if (mounted) setState(() => _errorTr = _describeError(e));
+      if (mounted) setState(() => _errorTr = _describeError(context.loc, e));
     } catch (e) {
-      if (mounted) setState(() => _errorTr = 'Beklenmeyen bir hata oluştu.');
+      if (mounted) {
+        setState(() => _errorTr = context.loc.l10n.authErrorGeneric);
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -78,6 +86,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.loc;
     return Scaffold(
       appBar: AppBar(title: const Text('INR Takip')),
       body: Center(
@@ -95,7 +104,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       size: 48, color: Theme.of(context).colorScheme.primary),
                   const SizedBox(height: 16),
                   Text(
-                    _isSignUp ? 'Hesap Oluştur' : 'Giriş Yap',
+                    _isSignUp ? loc.l10n.authSignUpTitle : loc.l10n.authSignInTitle,
                     style: Theme.of(context).textTheme.headlineSmall,
                     textAlign: TextAlign.center,
                   ),
@@ -103,18 +112,20 @@ class _AuthScreenState extends State<AuthScreen> {
                   TextFormField(
                     controller: _emailCtrl,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(labelText: 'E-posta'),
+                    decoration:
+                        InputDecoration(labelText: loc.l10n.emailLabel),
                     validator: (v) => (v == null || !v.contains('@'))
-                        ? 'Geçerli bir e-posta girin'
+                        ? loc.l10n.authEmailInvalid
                         : null,
                   ),
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: _passwordCtrl,
                     obscureText: true,
-                    decoration: const InputDecoration(labelText: 'Parola'),
+                    decoration:
+                        InputDecoration(labelText: loc.l10n.passwordLabel),
                     validator: (v) => (v == null || v.length < 6)
-                        ? 'En az 6 karakter olmalı'
+                        ? loc.l10n.authPasswordTooShort
                         : null,
                   ),
                   if (_errorTr != null) ...[
@@ -131,7 +142,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             height: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : Text(_isSignUp ? 'Kayıt Ol' : 'Giriş Yap'),
+                        : Text(_isSignUp
+                            ? loc.l10n.authSignUpAction
+                            : loc.l10n.authSignInAction),
                   ),
                   const SizedBox(height: 8),
                   TextButton(
@@ -142,8 +155,8 @@ class _AuthScreenState extends State<AuthScreen> {
                               _errorTr = null;
                             }),
                     child: Text(_isSignUp
-                        ? 'Zaten hesabım var, giriş yap'
-                        : 'Hesabım yok, kayıt ol'),
+                        ? loc.l10n.authHaveAccount
+                        : loc.l10n.authNoAccount),
                   ),
                 ],
               ),

@@ -328,7 +328,7 @@ class _SteadyTouchTargetState extends State<SteadyTouchTarget> {
                         color: Theme.of(context)
                             .colorScheme
                             .primary
-                            .withOpacity(0.55),
+                            .withValues(alpha: 0.55),
                         blurRadius: 24,
                         spreadRadius: 4,
                       ),
@@ -339,7 +339,12 @@ class _SteadyTouchTargetState extends State<SteadyTouchTarget> {
           ),
         );
       },
-      child: widget.child,
+      // Child'ın kendi dokunma alanı (ör. FilledButton'ın InkWell'i) devre
+      // dışı: onay YALNIZCA SteadyTouchArea'nın mıknatıs mantığından gelir.
+      // Aksi hâlde tek bir dokunuş hem butonun `onPressed`'ini hem de
+      // [onConfirm]'ü çalıştırıyor, `Navigator.pop` gibi işlemler iki kez
+      // koşuyordu (diyalog + altındaki ekran kapanıp siyah ekran kalıyordu).
+      child: IgnorePointer(child: widget.child),
     );
   }
 }

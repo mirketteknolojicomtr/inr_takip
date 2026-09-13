@@ -13,3 +13,8 @@ pubspec.lock
 
 # OS
 .DS_Store
+
+# Android yayın imzalama -- ASLA depoya girmemeli
+android/key.properties
+*.jks
+*.keystore

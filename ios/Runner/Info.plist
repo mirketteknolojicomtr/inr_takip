@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Inr Takip</string>
+	<string>INR Takip</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>inr_takip</string>
+	<string>INR Takip</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -26,6 +26,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>INR ölçüm cihazınızın ekranındaki değeri kamerayla okuyup ölçüm formunu otomatik doldurmak için kamera erişimi gerekiyor. Görüntüler cihazınızdan dışarı çıkmaz.</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Kilo ve nabız verilerinizi INR ile birlikte değerlendirip olası ödem riskini tespit etmek için Sağlık verilerinizi okumamız gerekiyor.</string>
 	<key>UIApplicationSceneManifest</key>

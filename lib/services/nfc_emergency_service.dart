@@ -28,6 +28,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
+import '../l10n/domain_labels.dart';
 import 'lock_screen_sync_service.dart';
 
 /// Yayınlanacak NDEF içeriğini native tarafa ileten soyutlama —
@@ -37,30 +38,47 @@ abstract interface class NfcBroadcastGateway {
   Future<void> stopBroadcast();
 }
 
-class NfcEmergencyService {
+/// Acil durum verisini NFC yüzeyine yayınlar.
+///
+/// [LockScreenGateway]'i implemente eder: böylece widget ile aynı
+/// [LockScreenSyncService] akışına takılır ve her yeni INR kaydında
+/// yayınlanan metin kendiliğinden tazelenir — ayrı bir zamanlayıcıya veya
+/// ikinci bir repository aboneliğine gerek kalmaz.
+class NfcEmergencyService implements LockScreenGateway {
   final NfcBroadcastGateway _gateway;
 
   NfcEmergencyService(this._gateway);
 
+  @override
+  Future<void> publish(LockScreenPayload payload, Loc loc) =>
+      sync(payload, loc);
+
   /// SAF FONKSİYON: [payload]'dan, karşı cihazın NDEF metni olarak
   /// okuyacağı düz metni üretir. Native/IO bağımlılığı yok.
-  String buildNdefText(LockScreenPayload payload) {
+  ///
+  /// Dil, hastanın uygulamada seçtiği dildir. Yurt dışında okunma
+  /// ihtimaline karşı İngilizceye sabitlemek düşünülebilirdi; hastanın
+  /// kendi ülkesindeki ambulans ekibi çok daha olası olduğu için seçili
+  /// dil doğru varsayılandır.
+  String buildNdefText(Loc loc, LockScreenPayload payload) {
     final buffer = StringBuffer()
-      ..writeln('ACİL TIBBİ BİLGİ')
-      ..writeln('Hasta: ${payload.patientName}')
-      ..writeln('İlaç: ${payload.medicationName} (antikoagülan)')
-      ..writeln(payload.headlineTr);
+      ..writeln(loc.l10n.emergencyNdefTitle)
+      ..writeln(loc.l10n.emergencyNdefPatient(payload.patientName))
+      ..writeln(loc.l10n.emergencyNdefMedication(payload.medicationName))
+      ..writeln(payload.headline(loc));
 
     final contactName = payload.emergencyContactName;
     if (contactName != null && contactName.isNotEmpty) {
-      buffer.writeln(
-          'Acil kişi: $contactName ${payload.emergencyContactPhone ?? ''}');
+      buffer.writeln(loc.l10n.emergencyNdefContact(
+        contactName,
+        payload.emergencyContactPhone ?? '',
+      ));
     }
     return buffer.toString();
   }
 
-  Future<void> sync(LockScreenPayload payload) =>
-      _gateway.updateBroadcastPayload(buildNdefText(payload));
+  Future<void> sync(LockScreenPayload payload, Loc loc) =>
+      _gateway.updateBroadcastPayload(buildNdefText(loc, payload));
 
   Future<void> stop() => _gateway.stopBroadcast();
 }

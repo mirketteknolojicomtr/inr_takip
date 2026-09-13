@@ -3,16 +3,27 @@ import 'package:inr_takip/models/inr_entry.dart';
 import 'package:inr_takip/models/patient_profile.dart';
 import 'package:inr_takip/services/alert_service.dart';
 
+import 'l10n_helper.dart';
+
 class _NoopNotifications implements NotificationGateway {
   int callCount = 0;
   @override
-  Future<void> showLocalAlert(InrAlert alert) async => callCount++;
+  Future<void> showLocalAlert({
+    required String title,
+    required String body,
+    required AlertSeverity severity,
+  }) async =>
+      callCount++;
 }
 
 class _NoopEmergency implements EmergencyGateway {
   int callCount = 0;
   @override
-  Future<void> notifyContact(EmergencyContact c, InrAlert a) async =>
+  Future<void> notifyContact(
+    EmergencyContact c, {
+    required String title,
+    required String body,
+  }) async =>
       callCount++;
 }
 
@@ -30,7 +41,8 @@ void main() {
   );
 
   group('AlertService.evaluate', () {
-    final service = AlertService(_NoopNotifications(), _NoopEmergency());
+    final service =
+        AlertService(_NoopNotifications(), _NoopEmergency(), testLoc);
 
     test('hedef aralıkta uyarı üretmez', () {
       expect(service.evaluate(_entry(2.5), profile), isNull);
@@ -59,7 +71,7 @@ void main() {
     test('kritik değerde bildirim + acil kişi SMS tetiklenir', () async {
       final notif = _NoopNotifications();
       final emergency = _NoopEmergency();
-      final service = AlertService(notif, emergency);
+      final service = AlertService(notif, emergency, testLoc);
 
       await service.processNewEntry(_entry(5.2), profile);
 
@@ -70,7 +82,7 @@ void main() {
     test('warning seviyesinde acil kişi aranmaz', () async {
       final notif = _NoopNotifications();
       final emergency = _NoopEmergency();
-      final service = AlertService(notif, emergency);
+      final service = AlertService(notif, emergency, testLoc);
 
       await service.processNewEntry(_entry(3.4), profile);
 

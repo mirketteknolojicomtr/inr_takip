@@ -37,8 +37,10 @@ class SafeTouchButton extends StatefulWidget {
   /// Onay anındaki dokunsal geri bildirim şiddeti.
   final HapticFeedbackStyle hapticStyle;
 
-  /// TTS dili (BCP-47). Varsayılan Türkçe.
-  final String ttsLanguage;
+  /// TTS dili (BCP-47). Verilmezse uygulamanın seçili dili kullanılır —
+  /// sabit bir dil, metin Japoncayken Türkçe seslendirme gibi anlaşılmaz
+  /// bir sonuç üretirdi.
+  final String? ttsLanguage;
 
   const SafeTouchButton({
     super.key,
@@ -46,7 +48,7 @@ class SafeTouchButton extends StatefulWidget {
     required this.announcement,
     required this.onConfirm,
     this.hapticStyle = HapticFeedbackStyle.medium,
-    this.ttsLanguage = 'tr-TR',
+    this.ttsLanguage,
   });
 
   @override
@@ -62,7 +64,19 @@ class _SafeTouchButtonState extends State<SafeTouchButton> {
   void initState() {
     super.initState();
     _tts = FlutterTts();
-    _tts.setLanguage(widget.ttsLanguage);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Dil değişince yeniden ayarlanır: kullanıcı uygulama açıkken dil
+    // değiştirebilir ve anons yeni dilde okunmalıdır.
+    final locale = Localizations.localeOf(context);
+    final tag = widget.ttsLanguage ??
+        (locale.countryCode == null
+            ? locale.languageCode
+            : '${locale.languageCode}-${locale.countryCode}');
+    _tts.setLanguage(tag);
   }
 
   @override
@@ -101,7 +115,12 @@ class _SafeTouchButtonState extends State<SafeTouchButton> {
         behavior: HitTestBehavior.opaque,
         onTap: _announce,
         onDoubleTap: _confirm,
-        child: widget.child,
+        // Child'ın kendi dokunma alanı (ör. FilledButton'ın InkWell'i)
+        // gesture arena'da daha derinde olduğu için tek dokunuşu kapar ve
+        // iki aşamalı onayı devre dışı bırakırdı. IgnorePointer bunu
+        // engeller; buton görsel olarak etkin kalır, dokunmayı yalnızca
+        // yukarıdaki GestureDetector alır.
+        child: IgnorePointer(child: widget.child),
       ),
     );
   }
