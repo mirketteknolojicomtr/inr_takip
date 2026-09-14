@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'main.dart';
+import 'services/app_settings.dart';
 import 'services/entitlement_service.dart';
 import 'services/firebase_auth_service.dart';
 import 'ui/paywall_screen.dart';
@@ -51,19 +52,25 @@ Future<void> main() async {
 
   const paywall = bool.fromEnvironment('DEV_PAYWALL');
 
-  runApp(PremiumScope(
-    service: entitlements,
-    child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
-      supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      builder: (context, child) =>
-          clampTextScale(context, child ?? const SizedBox.shrink()),
-      home: _DevHome(
-        entitlements: entitlements,
-        openPaywall: paywall,
+  // Profil ekranındaki dil seçici AppLocaleScope ister (bkz. InrTakipApp).
+  final localeController = AppLocaleController(await AppSettings().locale());
+
+  runApp(AppLocaleScope(
+    controller: localeController,
+    child: PremiumScope(
+      service: entitlements,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light(),
+        darkTheme: AppTheme.dark(),
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        builder: (context, child) =>
+            clampTextScale(context, child ?? const SizedBox.shrink()),
+        home: _DevHome(
+          entitlements: entitlements,
+          openPaywall: paywall,
+        ),
       ),
     ),
   ));

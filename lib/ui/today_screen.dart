@@ -141,11 +141,14 @@ class _Greeting extends StatelessWidget {
   Widget build(BuildContext context) {
     final hour = DateTime.now().hour;
     final loc = context.loc;
-    final greeting = hour < 11
-        ? loc.l10n.greetingMorning
-        : hour < 18
-            ? loc.l10n.greetingDay
-            : loc.l10n.greetingEvening;
+    // 00:00-04:59 gecedir: "Günaydın" değil akşam selamı gösterilir.
+    final greeting = hour < 5
+        ? loc.l10n.greetingEvening
+        : hour < 11
+            ? loc.l10n.greetingMorning
+            : hour < 18
+                ? loc.l10n.greetingDay
+                : loc.l10n.greetingEvening;
     final firstName = name.trim().split(' ').first;
 
     return Text(

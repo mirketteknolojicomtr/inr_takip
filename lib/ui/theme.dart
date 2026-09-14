@@ -157,10 +157,19 @@ class AppTheme {
           ),
         ),
       ),
-      listTileTheme: const ListTileThemeData(
+      // Renk açıkça verilmeli: renksiz stil verilince ListTile metni zemine
+      // karışıyordu (K vitamini günlüğünde başlık/alt yazı okunmuyordu).
+      listTileTheme: ListTileThemeData(
         minVerticalPadding: 12,
-        titleTextStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-        subtitleTextStyle: TextStyle(fontSize: 15),
+        titleTextStyle: TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+          color: scheme.onSurface,
+        ),
+        subtitleTextStyle: TextStyle(
+          fontSize: 15,
+          color: scheme.onSurfaceVariant,
+        ),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,

@@ -29,17 +29,21 @@ void main() {
     final entitlements = EntitlementService(FakeEntitlementGateway());
     await entitlements.start();
 
-    await tester.pumpWidget(PremiumScope(
-      service: entitlements,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light(),
-        darkTheme: AppTheme.dark(),
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        builder: (context, child) =>
-            clampTextScale(context, child ?? const SizedBox.shrink()),
-        home: HomeShell(uid: 'e2e', authService: FirebaseAuthService()),
+    // Profil ekranındaki dil seçici AppLocaleScope ister (bkz. InrTakipApp).
+    await tester.pumpWidget(AppLocaleScope(
+      controller: AppLocaleController(null),
+      child: PremiumScope(
+        service: entitlements,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light(),
+          darkTheme: AppTheme.dark(),
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          builder: (context, child) =>
+              clampTextScale(context, child ?? const SizedBox.shrink()),
+          home: HomeShell(uid: 'e2e', authService: FirebaseAuthService()),
+        ),
       ),
     ));
     // Bootstrap (sqflite + trend + ilaç planı) tamamlansın.

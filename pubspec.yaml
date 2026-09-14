@@ -1,7 +1,7 @@
 name: inr_takip
 description: "Warfarin kullanicilari icin INR, doz ve K vitamini takip uygulamasi cekirdegi."
 publish_to: "none"
-version: 0.1.0
+version: 1.0.0+3
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
