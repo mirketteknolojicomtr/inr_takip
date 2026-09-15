@@ -540,6 +540,34 @@ class _HomeShellState extends State<HomeShell> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
+  /// Hesap silme (App Store kuralı 5.1.1(v)). Sıra önemlidir: önce parolayla
+  /// yeniden doğrulama, sonra bulut ve yerel veri, en son Firebase hesabı.
+  /// Hesap silinince oturum kapanır ve AuthGate giriş ekranına döner. Bulut
+  /// verisi silinemezse hesaba dokunulmaz — kullanıcı, verisi yarım silinmiş
+  /// ama hâlâ var olan bir hesapla kalmaz.
+  Future<String?> _deleteAccount(String password) async {
+    final l10n = context.loc.l10n;
+    try {
+      await widget.authService.reauthenticate(password);
+      await _cloudSync.deleteAllRemote(widget.uid);
+      await _reminderScheduler.cancelAllReminders();
+      await _lockScreenSync.clearAll();
+      if (Platform.isAndroid) await _backgroundScheduler.cancel();
+      await AppDatabase.clearUserData();
+      await widget.authService.deleteCurrentUser();
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return switch (e.code) {
+        'wrong-password' || 'invalid-credential' => l10n.authErrorWrongPassword,
+        'network-request-failed' => l10n.deleteAccountNetworkError,
+        _ => l10n.authErrorGeneric,
+      };
+    } catch (e) {
+      debugPrint('[HESAP SİLME HATASI] $e');
+      return l10n.deleteAccountNetworkError;
+    }
+  }
+
   Future<void> _checkComorbidityNow() async {
     if (!await ensurePremium(context, PremiumFeature.healthSync)) return;
     final latest = await _inrRepo.getLatest();
@@ -620,6 +648,7 @@ class _HomeShellState extends State<HomeShell> {
             initialProfile: profile,
             onSave: _saveProfile,
             onSignOut: widget.authService.signOut,
+            onDeleteAccount: _deleteAccount,
             onShareWithCaregiver: _shareWithCaregiver,
           ),
         ],

@@ -94,6 +94,20 @@ class FirestoreCloudGateway implements CloudGateway {
   Future<void> deleteMedications(String uid, List<String> ids) =>
       _deleteAll(ids: ids, collection: _medications(uid));
 
+  /// Firestore alt koleksiyonları üst doküman silinince kendiliğinden
+  /// silinmez; önce ölçümler ve ilaçlar, en son profil dokümanı silinir.
+  @override
+  Future<void> deleteAllUserData(String uid) async {
+    for (final collection in [_entries(uid), _medications(uid)]) {
+      final snapshot = await collection.get();
+      await _deleteAll(
+        ids: snapshot.docs.map((d) => d.id).toList(),
+        collection: collection,
+      );
+    }
+    await _userDoc(uid).delete();
+  }
+
   Future<void> _writeAll<T>({
     required List<T> items,
     required String Function(T) idOf,

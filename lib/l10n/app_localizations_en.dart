@@ -1271,4 +1271,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editorNoteLabel => 'Note (optional)';
+
+  @override
+  String get profileDeleteAccount => 'Delete my account';
+
+  @override
+  String get deleteAccountTitle => 'Permanently delete your account?';
+
+  @override
+  String get deleteAccountWarning =>
+      'Your account, your cloud backup and all records on this device (INR results, medication plan, vitamin K journal) will be deleted. This cannot be undone. If you have an active subscription, cancel it separately in your App Store or Google Play settings.';
+
+  @override
+  String get deleteAccountPasswordLabel => 'Your password to confirm';
+
+  @override
+  String get deleteAccountConfirm => 'Delete permanently';
+
+  @override
+  String get deleteAccountNetworkError =>
+      'Your account could not be deleted. Check your internet connection and try again.';
 }

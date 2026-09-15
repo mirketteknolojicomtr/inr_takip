@@ -87,6 +87,9 @@ abstract interface class LockScreenGateway {
   /// [loc] dışarıdan verilir: widget ve NFC yüzeyleri aynı senkron
   /// döngüsünde, aynı dilde yayınlanmalıdır.
   Future<void> publish(LockScreenPayload payload, Loc loc);
+
+  /// Hesap silinince yüzeydeki kişisel bilgiyi (ad, INR, acil kişi) kaldırır.
+  Future<void> clear();
 }
 
 /// `home_widget` paketiyle App Group (iOS) / SharedPreferences (Android)
@@ -119,6 +122,26 @@ class HomeWidgetLockScreenGateway implements LockScreenGateway {
     await HomeWidget.saveWidgetData<String>(
         'emergencyContactPhone', payload.emergencyContactPhone ?? '');
 
+    await HomeWidget.updateWidget(
+      iOSName: _iosWidgetKind,
+      androidName: _androidWidgetName,
+    );
+  }
+
+  /// `null` yazmak anahtarı paylaşılan depodan siler; widget boş durumuna
+  /// döner.
+  @override
+  Future<void> clear() async {
+    await _ensureAppGroupConfigured();
+    for (final key in const [
+      'patientName',
+      'headline',
+      'medication',
+      'emergencyContactName',
+      'emergencyContactPhone',
+    ]) {
+      await HomeWidget.saveWidgetData<String>(key, null);
+    }
     await HomeWidget.updateWidget(
       iOSName: _iosWidgetKind,
       androidName: _androidWidgetName,
@@ -181,6 +204,21 @@ class LockScreenSyncService {
         // Tek bir yüzeyin arızası (NFC donanımı yok, widget kaldırılmış)
         // diğerlerini durdurmamalı.
         debugPrint('[ACİL YÜZEY YAYIN HATASI] ${gateway.runtimeType}: $e');
+      }
+    }
+  }
+
+  /// Hesap silinirken: INR akışını durdurur ve tüm yüzeylerdeki kişisel
+  /// bilgiyi kaldırır. Bir yüzeyin arızası diğerlerini durdurmaz.
+  Future<void> clearAll() async {
+    await _sub?.cancel();
+    _sub = null;
+    _started = false;
+    for (final gateway in _gateways) {
+      try {
+        await gateway.clear();
+      } catch (e) {
+        debugPrint('[ACİL YÜZEY TEMİZLEME HATASI] ${gateway.runtimeType}: $e');
       }
     }
   }

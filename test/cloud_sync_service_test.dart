@@ -80,6 +80,14 @@ class FakeCloudGateway implements CloudGateway {
       medications.remove(id);
     }
   }
+
+  @override
+  Future<void> deleteAllUserData(String uid) async {
+    _guard();
+    entries.clear();
+    medications.clear();
+    profile = null;
+  }
 }
 
 InrEntry entry(String id, double inr, {double dose = 5}) => InrEntry(
@@ -113,6 +121,24 @@ void main() {
     deletions = InMemoryDeletionLog();
     service =
         CloudSyncService(cloud, inrRepo, medRepo, profileRepo, deletions);
+  });
+
+  test('hesap silme: buluttaki profil, ölçüm ve ilaçlar silinir', () async {
+    cloud.profile = const PatientProfile(name: 'Ayşe');
+    cloud.entries['e1'] = entry('e1', 2.5);
+    cloud.medications['m1'] = med('m1', 'Warfarin');
+
+    await service.deleteAllRemote('u1');
+
+    expect(cloud.profile, isNull);
+    expect(cloud.entries, isEmpty);
+    expect(cloud.medications, isEmpty);
+  });
+
+  test('hesap silme: bulut hatası yutulmaz (hesap silinmeden durulur)',
+      () async {
+    cloud.failFetch = true;
+    expect(() => service.deleteAllRemote('u1'), throwsException);
   });
 
   test('yeni cihaz: buluttaki profil, ölçüm ve ilaçlar yerele iner',

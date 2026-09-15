@@ -13,6 +13,7 @@ import '../main.dart' show AppLocaleScope;
 import '../models/inr_entry.dart';
 import '../models/patient_profile.dart';
 import '../services/entitlement_service.dart';
+import 'delete_account_dialog.dart';
 import 'language_picker.dart';
 import 'paywall_screen.dart';
 import 'premium_gate.dart';
@@ -23,6 +24,10 @@ class ProfileScreen extends StatefulWidget {
   final Future<void> Function(PatientProfile profile) onSave;
   final VoidCallback onSignOut;
 
+  /// Parolayla doğrulayıp hesabı ve tüm verileri siler; başarıda `null`,
+  /// hatada gösterilecek mesajı döner (bkz. DeleteAccountDialog).
+  final Future<String?> Function(String password) onDeleteAccount;
+
   /// Güncel durum özetini acil durum kişisine gönderir (premium).
   /// Özeti main.dart kurar; ekran yalnızca tetikler.
   final Future<void> Function() onShareWithCaregiver;
@@ -32,6 +37,7 @@ class ProfileScreen extends StatefulWidget {
     required this.initialProfile,
     required this.onSave,
     required this.onSignOut,
+    required this.onDeleteAccount,
     required this.onShareWithCaregiver,
   });
 
@@ -281,6 +287,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: widget.onSignOut,
             icon: const Icon(Icons.logout),
             label: Text(loc.l10n.profileSignOut),
+          ),
+          const SizedBox(height: 8),
+          TextButton.icon(
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.error,
+            ),
+            onPressed: () => showDialog<bool>(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) =>
+                  DeleteAccountDialog(onConfirm: widget.onDeleteAccount),
+            ),
+            icon: const Icon(Icons.delete_forever_outlined),
+            label: Text(loc.l10n.profileDeleteAccount),
           ),
         ],
       ),

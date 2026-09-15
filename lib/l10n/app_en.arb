@@ -359,5 +359,11 @@
   "ok": "OK",
   "editorDeleteTitle": "Delete {medication}?",
   "editorDoseSection": "Dose",
-  "editorNoteLabel": "Note (optional)"
+  "editorNoteLabel": "Note (optional)",
+  "profileDeleteAccount": "Delete my account",
+  "deleteAccountTitle": "Permanently delete your account?",
+  "deleteAccountWarning": "Your account, your cloud backup and all records on this device (INR results, medication plan, vitamin K journal) will be deleted. This cannot be undone. If you have an active subscription, cancel it separately in your App Store or Google Play settings.",
+  "deleteAccountPasswordLabel": "Your password to confirm",
+  "deleteAccountConfirm": "Delete permanently",
+  "deleteAccountNetworkError": "Your account could not be deleted. Check your internet connection and try again."
 }

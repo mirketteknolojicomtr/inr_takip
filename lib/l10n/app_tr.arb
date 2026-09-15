@@ -920,5 +920,11 @@
     }
   },
   "editorDoseSection": "Doz",
-  "editorNoteLabel": "Not (opsiyonel)"
+  "editorNoteLabel": "Not (opsiyonel)",
+  "profileDeleteAccount": "Hesabımı sil",
+  "deleteAccountTitle": "Hesabınız kalıcı olarak silinsin mi?",
+  "deleteAccountWarning": "Hesabınız, buluttaki yedeğiniz ve bu cihazdaki tüm kayıtlarınız (INR ölçümleri, ilaç planı, K vitamini günlüğü) silinir. Bu işlem geri alınamaz. Aktif bir aboneliğiniz varsa ayrıca App Store veya Google Play ayarlarından iptal etmelisiniz.",
+  "deleteAccountPasswordLabel": "Onay için parolanız",
+  "deleteAccountConfirm": "Kalıcı olarak sil",
+  "deleteAccountNetworkError": "Hesap silinemedi. İnternet bağlantınızı kontrol edip tekrar deneyin."
 }

@@ -48,6 +48,9 @@ abstract interface class CloudGateway {
   Future<List<Medication>> fetchMedications(String uid);
   Future<void> saveMedications(String uid, List<Medication> medications);
   Future<void> deleteMedications(String uid, List<String> ids);
+
+  /// Kullanıcının buluttaki tüm ağacını siler (hesap silme).
+  Future<void> deleteAllUserData(String uid);
 }
 
 /// Bir senkron döngüsünün sonucu — UI'da "3 ölçüm geri yüklendi" gibi
@@ -100,6 +103,11 @@ class CloudSyncService {
   /// Profili tek başına gönderir (Profil ekranında "Kaydet" sonrası).
   Future<void> pushProfile(String uid, PatientProfile profile) =>
       _cloud.saveProfile(uid, profile);
+
+  /// Hesap silinirken buluttaki profil, ölçüm ve ilaç kayıtlarını siler.
+  /// [syncAll]'dan farklı olarak hatayı yutmaz: silme doğrulanmadan hesap
+  /// silinmemelidir.
+  Future<void> deleteAllRemote(String uid) => _cloud.deleteAllUserData(uid);
 
   /// Tam senkron döngüsü. Hata fırlatmaz: bulut erişilemezse uygulama
   /// yerel veriyle çalışmaya devam etmelidir.

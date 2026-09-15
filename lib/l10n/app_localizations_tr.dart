@@ -1269,4 +1269,24 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get editorNoteLabel => 'Not (opsiyonel)';
+
+  @override
+  String get profileDeleteAccount => 'Hesabımı sil';
+
+  @override
+  String get deleteAccountTitle => 'Hesabınız kalıcı olarak silinsin mi?';
+
+  @override
+  String get deleteAccountWarning =>
+      'Hesabınız, buluttaki yedeğiniz ve bu cihazdaki tüm kayıtlarınız (INR ölçümleri, ilaç planı, K vitamini günlüğü) silinir. Bu işlem geri alınamaz. Aktif bir aboneliğiniz varsa ayrıca App Store veya Google Play ayarlarından iptal etmelisiniz.';
+
+  @override
+  String get deleteAccountPasswordLabel => 'Onay için parolanız';
+
+  @override
+  String get deleteAccountConfirm => 'Kalıcı olarak sil';
+
+  @override
+  String get deleteAccountNetworkError =>
+      'Hesap silinemedi. İnternet bağlantınızı kontrol edip tekrar deneyin.';
 }

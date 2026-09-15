@@ -2258,6 +2258,42 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Not (opsiyonel)'**
   String get editorNoteLabel;
+
+  /// No description provided for @profileDeleteAccount.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabımı sil'**
+  String get profileDeleteAccount;
+
+  /// No description provided for @deleteAccountTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabınız kalıcı olarak silinsin mi?'**
+  String get deleteAccountTitle;
+
+  /// No description provided for @deleteAccountWarning.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabınız, buluttaki yedeğiniz ve bu cihazdaki tüm kayıtlarınız (INR ölçümleri, ilaç planı, K vitamini günlüğü) silinir. Bu işlem geri alınamaz. Aktif bir aboneliğiniz varsa ayrıca App Store veya Google Play ayarlarından iptal etmelisiniz.'**
+  String get deleteAccountWarning;
+
+  /// No description provided for @deleteAccountPasswordLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Onay için parolanız'**
+  String get deleteAccountPasswordLabel;
+
+  /// No description provided for @deleteAccountConfirm.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kalıcı olarak sil'**
+  String get deleteAccountConfirm;
+
+  /// No description provided for @deleteAccountNetworkError.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesap silinemedi. İnternet bağlantınızı kontrol edip tekrar deneyin.'**
+  String get deleteAccountNetworkError;
 }
 
 class _AppLocalizationsDelegate

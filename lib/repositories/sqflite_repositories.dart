@@ -78,6 +78,24 @@ class AppDatabase {
     return db;
   }
 
+  /// Hesap silindiğinde cihazdaki kişisel kayıtları temizler. Dil tercihi
+  /// (app_settings) kişisel veri değildir; giriş ekranı aynı dilde açılır.
+  static Future<void> clearUserData() async {
+    final db = await open();
+    await db.transaction((txn) async {
+      for (final table in const [
+        'inr_entries',
+        'vitamin_k_logs',
+        'patient_profile',
+        'medications',
+        'dose_intakes',
+        'deleted_records',
+      ]) {
+        await txn.delete(table);
+      }
+    });
+  }
+
   static Future<void> _createSettingsTable(Database db) async {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS app_settings (

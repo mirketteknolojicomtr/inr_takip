@@ -23,4 +23,25 @@ class FirebaseAuthService {
   }
 
   Future<void> signOut() => _auth.signOut();
+
+  /// Hesap silme gibi hassas işlemlerden önce parolayla yeniden doğrular.
+  /// Firebase eski oturumda silmeyi "requires-recent-login" ile reddeder;
+  /// önceden doğrulayınca bu hata kullanıcıya hiç yansımaz.
+  Future<void> reauthenticate(String password) async {
+    final user = _auth.currentUser;
+    final email = user?.email;
+    if (user == null || email == null) {
+      throw FirebaseAuthException(code: 'user-not-found');
+    }
+    await user.reauthenticateWithCredential(
+      EmailAuthProvider.credential(email: email, password: password),
+    );
+  }
+
+  /// Firebase hesabını kalıcı olarak siler; oturum da kapanır.
+  Future<void> deleteCurrentUser() async {
+    final user = _auth.currentUser;
+    if (user == null) throw FirebaseAuthException(code: 'user-not-found');
+    await user.delete();
+  }
 }

@@ -81,6 +81,10 @@ class NfcEmergencyService implements LockScreenGateway {
       _gateway.updateBroadcastPayload(buildNdefText(loc, payload));
 
   Future<void> stop() => _gateway.stopBroadcast();
+
+  /// Hesap silinince yayın durdurulur: telefon artık hasta bilgisi taşımaz.
+  @override
+  Future<void> clear() => stop();
 }
 
 /// Android'de `MethodChannel` üzerinden HCE servisine payload ileten
