@@ -1,7 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.health.READ_WEIGHT"/>
-    <uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <!-- İlaç hatırlatıcısı: doz saatinin dakikası önemli olduğu için tam
          zamanlı alarm gerekir. USE_EXACT_ALARM, "alarm/hatırlatıcı" temel
@@ -15,12 +13,6 @@
     <uses-permission android:name="com.android.vending.BILLING"/>
     <uses-permission android:name="android.permission.NFC"/>
     <uses-feature android:name="android.hardware.nfc" android:required="false"/>
-    <!-- workmanager paketi uzun süren işler için ön plan servisi izinleri
-         ekler. Uygulamadaki periyodik görev (comorbidity sync) kısa sürer ve
-         setForeground kullanmaz; Play politikası gereği bu izinler kaldırılır. -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:node="remove"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" tools:node="remove"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SHORT_SERVICE" tools:node="remove"/>
 
     <application
         android:label="INR Takip"
@@ -54,10 +46,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <!-- WorkManager'ın ön plan servisi kullanılmıyor (bkz. yukarıdaki izinler). -->
-        <service
-            android:name="androidx.work.impl.foreground.SystemForegroundService"
-            tools:node="remove"/>
 
         <service
             android:name=".InrHceService"

@@ -32,9 +32,6 @@ enum PremiumFeature {
   /// Firestore üzerinden bulut yedek + çoklu cihaz.
   cloudSync,
 
-  /// Apple Health / Google Fit ölçümleri + ödem riski taraması.
-  healthSync,
-
   /// Ana ekran / kilit ekranı widget'ı.
   lockScreenWidget,
 

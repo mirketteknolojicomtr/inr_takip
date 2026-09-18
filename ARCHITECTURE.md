@@ -11,7 +11,7 @@ UI (Widgets)
    │  yalnızca Stream/Future tüketir; platform paketi görmez
 Services   AlertService · TrendService · MedicationService
            MedicationReminderService · PdfReportService · EntitlementService
-           ComorbiditySyncService · LockScreenSyncService · NfcEmergencyService
+           LockScreenSyncService · NfcEmergencyService
            InrOcrService · CloudSyncService · CaregiverShareService
            FirebaseAuthService
    │  saf iş mantığı + soyut gateway'ler
@@ -30,7 +30,6 @@ url_launcher, MethodChannel) hiç görmez:
 | `EmergencyGateway` | `SmsEmergencyGateway` | url_launcher (`sms:`) |
 | `ReminderScheduler` | `LocalReminderScheduler` | flutter_local_notifications + timezone |
 | `EntitlementGateway` | `RevenueCatEntitlementGateway` / `FakeEntitlementGateway` | purchases_flutter |
-| `HealthMetricsGateway` | `HealthPackageMetricsGateway` | health |
 | `LockScreenGateway` | `HomeWidgetLockScreenGateway` | home_widget |
 | `NfcBroadcastGateway` | `PlatformChannelNfcGateway` | MethodChannel → Kotlin HCE |
 | `CloudGateway` | `FirestoreCloudGateway` | cloud_firestore |
@@ -72,10 +71,6 @@ url_launcher, MethodChannel) hiç görmez:
 | `services/entitlement_service.dart` | Premium yetkilendirme; `kAlwaysFreeFeatures` güvenlik sınırını kodda sabitler |
 | `services/revenuecat_entitlement_gateway.dart` | Tek mağaza-bağımlı dosya |
 | `services/inr_ocr_service.dart` | Ham OCR metninden INR değeri çıkaran saf regex mantığı (kamera/ML Kit bağımlılığı yok) |
-| `services/comorbidity_sync_service.dart` | `EdemaRiskEvaluator`: son 24 saatte >1,5 kg kilo artışı **ve** hedef dışı INR → kritik uyarı. Nabız arayüzde var, kuralda değil |
-| `services/health_package_metrics_gateway.dart` | HealthKit / Health Connect okuma; izin yoksa boş liste → sessizce değerlendirme yapılmaz |
-| `services/health_background_observer.dart` | iOS `HKObserverQuery` köprüsü (`inr_takip/health_observer` channel) |
-| `services/comorbidity_background_scheduler.dart` | Android WorkManager periyodik görevi (6 saat) |
 | `services/lock_screen_sync_service.dart` | `LockScreenPayload.build()` saf fonksiyonu + kayıtlı **her** acil yüzeye yayın; INR akışına abone (poll yok), bir yüzeyin hatası ötekini düşürmez |
 | `services/nfc_emergency_service.dart` | `buildNdefText()` saf fonksiyonu; `LockScreenGateway`'i implemente eder → widget ile aynı akışa takılır |
 | `services/caregiver_share_service.dart` | `buildSummaryTr()` saf fonksiyonu: son INR + bugünkü doz + 7 günlük uyum özeti |
@@ -134,15 +129,12 @@ bunu kilitler; mıknatıs bölgesi bu yüzden yalnızca aksiyon satırını kaps
 
 | Akış | iOS | Android |
 |---|---|---|
-| Ödem taraması | `HKObserverQuery` + `enableBackgroundDelivery` — **olay bazlı**, yalnızca yeni kilo örneği yazıldığında uyanır (`AppDelegate.swift`) | WorkManager periyodik görev (6 saat; OS tabanı ~15 dk) |
 | İlaç hatırlatıcısı | flutter_local_notifications, cihaz saat dilimi | Aynı + `SCHEDULE_EXACT_ALARM`/`USE_EXACT_ALARM`; izin yoksa `inexactAllowWhileIdle`'a düşer |
 | Yeniden başlatma | — | `ScheduledNotificationBootReceiver` planlı bildirimleri geri yükler |
 
-WorkManager görevleri **ayrı bir Dart izolatında** çalışır ve ana uygulamanın
-state'ini göremez. Bu yüzden `comorbidityCallbackDispatcher` bağımlılıkları
-sıfırdan kurar ve `SqfliteInrRepository` kullanır (`InMemory*` değil) — her
-izolat aynı fiziksel sqlite dosyasını açtığı için uygulama kapalıyken de son
-INR kaydı doğru okunur.
+Planlı bildirimler **ayrı bir Dart izolatında** çalışır ve ana uygulamanın
+state'ini göremez; seçili dil bu yüzden sqflite'tan okunur
+(bkz. `services/app_settings.dart`).
 
 ## Acil durum yüzeyi: widget + NFC
 
@@ -211,19 +203,11 @@ Gün adlarını ve saat biçimini ARB'ye elle yazmak yerine CLDR'den almak
 18 dil için hem daha az iş hem daha doğrudur: "Pzt"/"Mon"/"月" ve
 12/24 saat farkı zaten CLDR verisinde vardır.
 
-### Ölçü birimi
-
-Kilo HealthKit/Health Connect'ten **her zaman kilogram** okunur; ödem eşiği
-(1,5 kg) da kg cinsindendir. Yalnızca *gösterim* çevrilir — ABD yerel
-ayarında pound. Böylece klinik eşik tek birimde kalır ve dönüşüm hatası
-riski gösterimle sınırlıdır.
-
 ### Dil kaynağı ve arka plan
 
 Seçili dil `app_settings` tablosunda (sqflite, şema v4) tutulur — profilde
-değil, çünkü dil cihazın tercihidir ve buluta senkronlanmamalıdır. Bildirim
-ve ödem taraması **arka plan izolatında** çalışır ve orada widget ağacı
-yoktur; `resolveLoc()` aynı sqlite dosyasından okuyarak orada da doğru dili
+değil, çünkü dil cihazın tercihidir ve buluta senkronlanmamalıdır. Planlı
+bildirimler **arka plan izolatında** çalışır ve orada widget ağacı yoktur; `resolveLoc()` aynı sqlite dosyasından okuyarak orada da doğru dili
 verir. `main()` açılışta `initializeDateFormatting()` çağırır, aksi hâlde
 Türkçe dışı bir dilde ilk `DateFormat` çağrısı `LocaleDataException` atar.
 
@@ -289,9 +273,8 @@ işlevle çalışır.
 - **Sıklık modelde, platform serviste:** "Gün aşırı", "haftalık şema"
   kuralları `Medication`'da saf Dart; bildirim API'sinin tekrar kuralları
   `MedicationReminderService`'te.
-- **Dürüst platform sınırları:** Sessiz SMS (`sms_emergency_gateway.dart`),
-  iOS NFC yayını (`nfc_emergency_service.dart`) ve HealthKit arka plan
-  tetikleyicileri (`comorbidity_sync_service.dart`) için neyin mümkün
+- **Dürüst platform sınırları:** Sessiz SMS (`sms_emergency_gateway.dart`)
+  ve iOS NFC yayını (`nfc_emergency_service.dart`) için neyin mümkün
   olmadığı dosya başlarında gerekçesiyle belgelenmiştir.
 
 ## Testler
@@ -349,17 +332,15 @@ Future<void> addMeasurement(InrEntry entry) async {
 
 ## Platform yapılandırması
 
-**Android** (`AndroidManifest.xml`, `build.gradle.kts`) — `minSdk 26`
-(Health Connect gereği). İzinler: `health.READ_WEIGHT`,
-`health.READ_HEART_RATE`, `POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`,
+**Android** (`AndroidManifest.xml`, `build.gradle.kts`) — `minSdk 26`.
+İzinler: `POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`,
 `USE_EXACT_ALARM`, `RECEIVE_BOOT_COMPLETED`, `com.android.vending.BILLING`,
 `NFC`. Bildirilen bileşenler: `InrHceService`, `InrEmergencyGlanceWidget`,
 flutter_local_notifications boot receiver'ları.
 
-**iOS** — `Runner.entitlements`: App Group + `developer.healthkit` +
-`healthkit.background-delivery`. `Info.plist`:
-`NSHealthShareUsageDescription` ve `NSCameraUsageDescription` (OCR ekranı
-kamera açar; anahtar olmadan iOS uygulamayı anında sonlandırır).
+**iOS** — `Runner.entitlements`: App Group. `Info.plist`:
+`NSCameraUsageDescription` (OCR ekranı kamera açar; anahtar olmadan iOS
+uygulamayı anında sonlandırır).
 `AppDelegate.swift` plugin kaydını `didFinishLaunchingWithOptions` içinde
 senkron yapar; Storyboard tabanlı kurulumda yeni `FlutterImplicitEngineDelegate`
 callback'i hiç tetiklenmediği ve sqflite dahil hiçbir plugin kayıt olamadığı

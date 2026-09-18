@@ -156,7 +156,6 @@ String alertTitle(Loc loc, InrAlert alert) => switch (alert.kind) {
       InrAlertKind.criticalHigh => loc.l10n.alertCriticalHighTitle,
       InrAlertKind.belowRange => loc.l10n.alertBelowRangeTitle,
       InrAlertKind.aboveRange => loc.l10n.alertAboveRangeTitle,
-      InrAlertKind.edema => loc.l10n.alertEdemaTitle,
     };
 
 String alertMessage(Loc loc, InrAlert alert) {
@@ -172,10 +171,6 @@ String alertMessage(Loc loc, InrAlert alert) {
       loc.l10n.alertBelowRangeMessage(value, lower, upper),
     InrAlertKind.aboveRange =>
       loc.l10n.alertAboveRangeMessage(value, lower, upper),
-    InrAlertKind.edema => loc.l10n.alertEdemaMessage(
-        loc.formats.weightKg(alert.weightDeltaKg ?? 0),
-        value,
-      ),
   };
 }
 
@@ -185,7 +180,6 @@ String premiumFeatureLabel(Loc loc, PremiumFeature feature) =>
       PremiumFeature.pdfReport => loc.l10n.premiumPdfReport,
       PremiumFeature.ocrScan => loc.l10n.premiumOcrScan,
       PremiumFeature.cloudSync => loc.l10n.premiumCloudSync,
-      PremiumFeature.healthSync => loc.l10n.premiumHealthSync,
       PremiumFeature.lockScreenWidget => loc.l10n.premiumLockScreenWidget,
       PremiumFeature.dietInsights => loc.l10n.premiumDietInsights,
       PremiumFeature.unlimitedMedications =>

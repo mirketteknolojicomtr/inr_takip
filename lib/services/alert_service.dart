@@ -22,10 +22,6 @@ enum InrAlertKind {
   criticalHigh,
   belowRange,
   aboveRange,
-
-  /// Ödem taraması: ani kilo artışı + hedef dışı INR
-  /// (bkz. comorbidity_sync_service.dart).
-  edema,
 }
 
 class InrAlert {
@@ -38,9 +34,6 @@ class InrAlert {
   /// Hedef aralık — yalnızca hedef dışı uyarılarında anlamlı.
   final TargetRange? targetRange;
 
-  /// Son 24 saatteki kilo artışı (kg) — yalnızca [InrAlertKind.edema].
-  final double? weightDeltaKg;
-
   /// Acil durum kişisi de bilgilendirilmeli mi?
   final bool notifyEmergencyContact;
 
@@ -49,7 +42,6 @@ class InrAlert {
     required this.kind,
     required this.inrValue,
     this.targetRange,
-    this.weightDeltaKg,
     this.notifyEmergencyContact = false,
   });
 }

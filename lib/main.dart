@@ -24,14 +24,10 @@ import 'repositories/sqflite_repositories.dart';
 import 'services/alert_service.dart';
 import 'services/app_settings.dart';
 import 'services/caregiver_share_service.dart';
-import 'services/comorbidity_background_scheduler.dart';
-import 'services/comorbidity_sync_service.dart';
 import 'services/entitlement_service.dart';
 import 'services/firebase_auth_service.dart';
 import 'services/cloud_sync_service.dart';
 import 'services/firestore_cloud_gateway.dart';
-import 'services/health_background_observer.dart';
-import 'services/health_package_metrics_gateway.dart';
 import 'services/local_notification_gateway.dart';
 import 'services/local_reminder_scheduler.dart';
 import 'services/lock_screen_sync_service.dart';
@@ -253,14 +249,6 @@ class _HomeShellState extends State<HomeShell> {
     ],
     resolveLoc,
   );
-  late final _comorbiditySync = ComorbiditySyncService(
-    HealthPackageMetricsGateway(),
-    _notificationGateway,
-    resolveLoc,
-  );
-  late final _healthObserver =
-      HealthBackgroundObserver(_comorbiditySync, _inrRepo);
-  final _backgroundScheduler = ComorbidityBackgroundScheduler();
   final _deletionLog = SqfliteDeletionLog();
   late final _cloudSync = CloudSyncService(
     FirestoreCloudGateway(),
@@ -327,13 +315,6 @@ class _HomeShellState extends State<HomeShell> {
     }
     if (entitlements.has(PremiumFeature.lockScreenWidget)) {
       await _lockScreenSync.addGateway(HomeWidgetLockScreenGateway());
-    }
-    if (entitlements.has(PremiumFeature.healthSync)) {
-      if (Platform.isAndroid) {
-        await _backgroundScheduler.initializeAndSchedule();
-      } else if (Platform.isIOS) {
-        _healthObserver.start();
-      }
     }
   }
 
@@ -552,7 +533,6 @@ class _HomeShellState extends State<HomeShell> {
       await _cloudSync.deleteAllRemote(widget.uid);
       await _reminderScheduler.cancelAllReminders();
       await _lockScreenSync.clearAll();
-      if (Platform.isAndroid) await _backgroundScheduler.cancel();
       await AppDatabase.clearUserData();
       await widget.authService.deleteCurrentUser();
       return null;
@@ -566,24 +546,6 @@ class _HomeShellState extends State<HomeShell> {
       debugPrint('[HESAP SİLME HATASI] $e');
       return l10n.deleteAccountNetworkError;
     }
-  }
-
-  Future<void> _checkComorbidityNow() async {
-    if (!await ensurePremium(context, PremiumFeature.healthSync)) return;
-    final latest = await _inrRepo.getLatest();
-    final alert = await _comorbiditySync.checkNow(latest);
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          alert == null
-              ? context.loc.l10n.edemaScanNoRisk
-              : context.loc.l10n.edemaScanRisk(
-                  context.loc.formats.weightKg(alert.weightDeltaKg),
-                ),
-        ),
-      ),
-    );
   }
 
   /// Sekme başlıkları çeviriden gelir; sıra bu listeyle aynı olmalıdır.
@@ -611,14 +573,6 @@ class _HomeShellState extends State<HomeShell> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_titles(loc)[_tab]),
-        actions: [
-          if (_tab == 0)
-            IconButton(
-              tooltip: loc.l10n.edemaScanTooltip,
-              icon: const Icon(Icons.monitor_heart_outlined),
-              onPressed: _checkComorbidityNow,
-            ),
-        ],
       ),
       body: IndexedStack(
         index: _tab,

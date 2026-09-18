@@ -47,10 +47,6 @@ takibi yapan, temiz mimarili bir **Flutter** uygulaması.
   kullanıyor, son INR şu, acil kişi bu" bilgisini alır — uygulama kapalıyken,
   kilit ekranında bile. Yayınlanan metin her yeni INR kaydında kendiliğinden
   tazelenir. *(iOS'ta karşılığı yoktur; gerekçe aşağıda.)*
-- **Ödem Taraması** — Apple Health / Health Connect'ten kilo okunur; son
-  24 saatte **1,5 kg'dan fazla ani artış** (sıvı birikmesi belirtisi) **ve**
-  hedef dışı INR birlikte görülürse kritik uyarı üretilir. Nabız okuma
-  arayüzde hazır, henüz tetikleme kuralına dahil değil
 
 ### Erişilebilirlik — 60+ hastalar için mühendislik
 
@@ -70,8 +66,6 @@ Bu bir slogan değil, kodda uygulanan kısıt (bkz. [ARCHITECTURE.md](ARCHITECTU
   ve Türki cumhuriyetler. **Tamamlanan: Türkçe ve İngilizce.**
 - Sayı, tarih, saat ve gün adları yerel ayardan gelir: "2,5 mg" / "2.5 mg",
   "19:00" / "7:00 PM", "Pzt" / "Mon"
-- **Ağırlık birimi otomatik** — ABD'de pound, diğer her yerde kilogram.
-  Ödem eşiği (1,5 kg) içeride hep kg kalır; yalnızca gösterim çevrilir
 - Profil ekranından dil seçilebilir; liste dilleri kendi dillerinde gösterir
 - Bildirimler ve acil NFC kartı da seçili dilde üretilir
 
@@ -92,7 +86,7 @@ Bu bir slogan değil, kodda uygulanan kısıt (bkz. [ARCHITECTURE.md](ARCHITECTU
 UI (Widgets)
    │  yalnızca Stream/Future tüketir; platform paketi görmez
 Services   AlertService · TrendService · MedicationService · PdfReportService
-           ComorbiditySyncService · LockScreenSyncService · EntitlementService …
+           LockScreenSyncService · EntitlementService …
    │  saf iş mantığı + soyut gateway'ler
 Repositories   soyut arayüzler : InMemory* (test) ⇄ Sqflite* (üretim)
    │
@@ -135,10 +129,6 @@ lib/
 │   ├── reminder_service.dart      # Sıklık -> bildirim planı
 │   ├── local_reminder_scheduler.dart        # Zaman dilimli tekrarlı bildirim
 │   ├── inr_ocr_service.dart       # Ham OCR metninden INR ayıklama (saf)
-│   ├── comorbidity_sync_service.dart        # Kilo+nabız ↔ INR ödem riski
-│   ├── health_package_metrics_gateway.dart  # HealthKit / Health Connect
-│   ├── health_background_observer.dart      # iOS HKObserverQuery köprüsü
-│   ├── comorbidity_background_scheduler.dart# Android WorkManager görevi
 │   ├── lock_screen_sync_service.dart        # Acil yüzeyleri besler (widget+NFC)
 │   ├── nfc_emergency_service.dart           # Android HCE payload'ı
 │   ├── caregiver_share_service.dart         # Yakına durum özeti (saf metin)
@@ -227,10 +217,8 @@ flutter test integration_test/app_test.dart -d <device-id>
 
 | | Android | iOS |
 |---|---|---|
-| Minimum | `minSdk 26` (Health Connect gereği) | — |
-| Sağlık verisi | Health Connect uygulaması kurulu olmalı; `READ_WEIGHT`, `READ_HEART_RATE` | `NSHealthShareUsageDescription` + HealthKit & background-delivery entitlement |
+| Minimum | `minSdk 26` | — |
 | Kamerayla OCR | `camera` eklentisinin manifesti izni sağlar | `NSCameraUsageDescription` |
-| Arka plan taraması | WorkManager, 6 saatte bir | `HKObserverQuery`, olay bazlı (yeni kilo örneğinde uyanır) |
 | Hatırlatıcı | `SCHEDULE_EXACT_ALARM` / `USE_EXACT_ALARM`, `RECEIVE_BOOT_COMPLETED` | — |
 | Widget | Glance + SharedPreferences | WidgetKit + App Group |
 | NFC acil kart | HCE (`HostApduService`), kilit ekranında çalışır | **Desteklenmiyor** — Apple HCE'yi yalnızca Wallet/Apple Pay'e açar |
@@ -279,10 +267,10 @@ sabitinde kodlanmış ve `entitlement_test.dart` ile test edilmiştir.
 | İlaç planı: doz, sıklık, hatırlatıcı | PDF doktor raporu |
 | Kritik eşik uyarısı + acil SMS | Kamerayla INR okuma (OCR) |
 | Son 30 günün trendi | Bulut yedek + çoklu cihaz |
-| 2 ilaca kadar | Sağlık uygulaması senkronu (ödem taraması) |
+| 2 ilaca kadar | Yakınla paylaşım |
 | Acil durum kartı (widget verisi + NFC) | Ana ekran / kilit ekranı widget'ı |
 | K vitamini günlüğüne kayıt | K vitamini – INR içgörüleri |
-| | Yakınla paylaşım, sınırsız ilaç |
+| | Sınırsız ilaç |
 
 Ücretsiz katman limitleri tek yerde: `FreeTierLimits` (`historyDays = 30`,
 `medicationCount = 2`).

@@ -6,10 +6,9 @@
 /// elle yazmak yerine `intl`in CLDR verisinden almak 18 dil için hem
 /// daha az iş hem daha doğrudur.
 ///
-/// AĞIRLIK BİRİMİ: ödem taraması kiloyu HealthKit/Health Connect'ten
-/// **her zaman kilogram** olarak okur; eşik (1,5 kg) de kg cinsindendir.
-/// Yalnızca gösterim çevrilir — ABD yerel ayarında pound. Böylece klinik
-/// eşik tek bir birimde kalır, dönüşüm hatası riski gösterimle sınırlıdır.
+/// AĞIRLIK BİRİMİ: ağırlık içeride **her zaman kilogram** tutulur, yalnızca
+/// gösterim çevrilir — ABD yerel ayarında pound. Böylece klinik değer tek
+/// bir birimde kalır, dönüşüm hatası riski gösterimle sınırlıdır.
 library;
 
 import 'dart:ui' show Locale;

@@ -374,18 +374,6 @@ abstract class AppLocalizations {
   /// **'INR {value} hedef aralıkta. Bu düzeni koruyun.'**
   String alertInRangeMessage(String value);
 
-  /// No description provided for @alertEdemaTitle.
-  ///
-  /// In tr, this message translates to:
-  /// **'Olası akut ödem + hedef dışı INR'**
-  String get alertEdemaTitle;
-
-  /// No description provided for @alertEdemaMessage.
-  ///
-  /// In tr, this message translates to:
-  /// **'Son 24 saatte {delta} ani kilo artışı (sıvı birikmesi belirtisi olabilir) kaydedildi ve güncel INR {value} hedef aralığın dışında. Bu bilgiyi doktorunuzla paylaşmanız önerilir.'**
-  String alertEdemaMessage(String delta, String value);
-
   /// No description provided for @reminderTitle.
   ///
   /// In tr, this message translates to:
@@ -421,12 +409,6 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Bulut yedek ve senkron'**
   String get premiumCloudSync;
-
-  /// No description provided for @premiumHealthSync.
-  ///
-  /// In tr, this message translates to:
-  /// **'Sağlık uygulaması senkronu'**
-  String get premiumHealthSync;
 
   /// No description provided for @premiumLockScreenWidget.
   ///
@@ -599,7 +581,7 @@ abstract class AppLocalizations {
   /// No description provided for @notificationChannelDescription.
   ///
   /// In tr, this message translates to:
-  /// **'Kritik/hedef dışı INR değerleri ve ödem riski uyarıları'**
+  /// **'Kritik ve hedef dışı INR uyarıları'**
   String get notificationChannelDescription;
 
   /// No description provided for @reminderChannelName.
@@ -1778,24 +1760,6 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Bu cihazda mesaj gönderebilecek bir uygulama bulunamadı.'**
   String get shareUnavailable;
-
-  /// No description provided for @edemaScanNoRisk.
-  ///
-  /// In tr, this message translates to:
-  /// **'Ödem taraması: risk bulunamadı.'**
-  String get edemaScanNoRisk;
-
-  /// No description provided for @edemaScanRisk.
-  ///
-  /// In tr, this message translates to:
-  /// **'Risk tespit edildi: {delta} artış + hedef dışı INR.'**
-  String edemaScanRisk(String delta);
-
-  /// No description provided for @edemaScanTooltip.
-  ///
-  /// In tr, this message translates to:
-  /// **'Ödem taraması'**
-  String get edemaScanTooltip;
 
   /// No description provided for @scanInrTooltip.
   ///

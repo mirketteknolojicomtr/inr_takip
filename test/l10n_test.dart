@@ -69,7 +69,6 @@ void main() {
           kind: kind,
           inrValue: 2.4,
           targetRange: TargetRange.standard,
-          weightDeltaKg: 1.8,
         );
         expect(alertTitle(loc, alert), isNotEmpty);
         expect(alertMessage(loc, alert), isNotEmpty);

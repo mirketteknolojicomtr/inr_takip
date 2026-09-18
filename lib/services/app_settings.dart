@@ -4,10 +4,9 @@
 /// tercihidir. Profil buluta senkronlanır; bir cihazda Türkçe seçmek
 /// ötekini de değiştirmemelidir.
 ///
-/// Neden sqflite: bildirim ve ödem taraması **arka plan izolatında**
-/// çalışır ve orada widget ağacı yoktur. Aynı sqlite dosyası her
-/// izolattan okunabildiği için seçili dil oradan da alınabilir
-/// (bkz. comorbidity_background_scheduler.dart).
+/// Neden sqflite: planlı bildirimler **arka plan izolatında** çalışır ve
+/// orada widget ağacı yoktur. Aynı sqlite dosyası her izolattan
+/// okunabildiği için seçili dil oradan da alınabilir.
 library;
 
 import 'dart:ui' show Locale;

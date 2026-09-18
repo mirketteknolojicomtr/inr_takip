@@ -149,18 +149,6 @@
       }
     }
   },
-  "alertEdemaTitle": "Olası akut ödem + hedef dışı INR",
-  "alertEdemaMessage": "Son 24 saatte {delta} ani kilo artışı (sıvı birikmesi belirtisi olabilir) kaydedildi ve güncel INR {value} hedef aralığın dışında. Bu bilgiyi doktorunuzla paylaşmanız önerilir.",
-  "@alertEdemaMessage": {
-    "placeholders": {
-      "delta": {
-        "type": "String"
-      },
-      "value": {
-        "type": "String"
-      }
-    }
-  },
   "reminderTitle": "{medication} zamanı",
   "@reminderTitle": {
     "placeholders": {
@@ -184,7 +172,6 @@
   "premiumPdfReport": "PDF doktor raporu",
   "premiumOcrScan": "Kamerayla INR okuma",
   "premiumCloudSync": "Bulut yedek ve senkron",
-  "premiumHealthSync": "Sağlık uygulaması senkronu",
   "premiumLockScreenWidget": "Ana ekran widget’ı",
   "premiumDietInsights": "Diyet–INR içgörüleri",
   "premiumUnlimitedMedications": "Sınırsız ilaç",
@@ -307,7 +294,7 @@
   },
   "shareSummaryFooter": "Bu özet INR Takip uygulamasından gönderildi. Tıbbi karar hekime aittir.",
   "notificationChannelName": "INR Uyarıları",
-  "notificationChannelDescription": "Kritik/hedef dışı INR değerleri ve ödem riski uyarıları",
+  "notificationChannelDescription": "Kritik ve hedef dışı INR uyarıları",
   "reminderChannelName": "İlaç Hatırlatıcıları",
   "reminderChannelDescription": "İlaç alım saatleriniz için hatırlatma bildirimleri",
   "reminderBody": "{medication} — {dose}.",
@@ -810,16 +797,6 @@
   "shareDraftReady": "Özet hazırlandı — göndermek için Mesajlar uygulamasında “Gönder”e dokunun.",
   "shareNoContact": "Önce bu ekrandan acil durum kişisi ve telefonunu kaydedin.",
   "shareUnavailable": "Bu cihazda mesaj gönderebilecek bir uygulama bulunamadı.",
-  "edemaScanNoRisk": "Ödem taraması: risk bulunamadı.",
-  "edemaScanRisk": "Risk tespit edildi: {delta} artış + hedef dışı INR.",
-  "@edemaScanRisk": {
-    "placeholders": {
-      "delta": {
-        "type": "String"
-      }
-    }
-  },
-  "edemaScanTooltip": "Ödem taraması",
   "scanInrTooltip": "Kamerayla INR oku",
   "bootstrapFailed": "Uygulama başlatılamadı",
   "languageSectionTitle": "Dil",

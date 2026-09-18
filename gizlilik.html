@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INR Takip — Gizlilik Politikası / Privacy Policy</title>
+<style>
+    :root {
+        --primary: #064E3B;
+        --primary-light: #047857;
+        --text: #1F2937;
+        --text-light: #4B5563;
+        --bg: #F9FAFB;
+        --card-bg: #FFFFFF;
+        --border: #E5E7EB;
+        --accent-red: #DC2626;
+    }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.7;
+        color: var(--text);
+        background-color: var(--bg);
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 860px;
+        margin: 40px auto;
+        background: var(--card-bg);
+        padding: 40px 50px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--border);
+    }
+    header { border-bottom: 2px solid var(--border); padding-bottom: 24px; margin-bottom: 32px; }
+    h1 { color: var(--primary); font-size: 28px; margin: 0 0 10px 0; }
+    .last-updated { font-size: 14px; color: var(--text-light); }
+    h2 {
+        color: var(--primary-light);
+        font-size: 20px;
+        margin-top: 32px;
+        margin-bottom: 12px;
+        border-left: 4px solid var(--primary);
+        padding-left: 12px;
+    }
+    h3 { font-size: 16px; margin-top: 20px; color: var(--text); }
+    p, li { color: var(--text-light); font-size: 15px; }
+    ul { padding-left: 20px; }
+    li { margin-bottom: 8px; }
+    .alert-box {
+        background-color: #FEF2F2;
+        border-left: 4px solid var(--accent-red);
+        padding: 16px;
+        border-radius: 6px;
+        margin: 24px 0;
+    }
+    .alert-box strong { color: var(--accent-red); display: block; margin-bottom: 6px; }
+    .alert-box p { color: #991B1B; margin: 0; font-size: 14px; }
+    .contact-box {
+        background-color: #F0FDF4;
+        border: 1px solid #BBF7D0;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 32px;
+    }
+    .contact-box h3 { color: var(--primary); margin-top: 0; }
+    footer { text-align: center; margin-top: 40px; font-size: 13px; color: var(--text-light); }
+    .lang-switch { display: flex; gap: 8px; margin-bottom: 24px; }
+    .lang-switch button {
+        font: inherit;
+        font-size: 14px;
+        padding: 8px 18px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text-light);
+        cursor: pointer;
+    }
+    .lang-switch button[aria-selected="true"] {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #fff;
+        font-weight: 600;
+    }
+    [hidden] { display: none; }
+    table { border-collapse: collapse; width: 100%; margin-top: 8px; }
+    th, td { text-align: left; border-bottom: 1px solid var(--border); padding: 8px 10px; font-size: 14px; color: var(--text-light); }
+    th { color: var(--text); font-weight: 600; }
+    @media (max-width: 600px) {
+        .container { margin: 0; border-radius: 0; padding: 24px 20px; border-left: none; border-right: none; }
+    }
+    /* Google Sites vb. bir çerçeve içine gömüldüğünde: dış kutu kalkar,
+       içerik çerçevenin tamamını kaplar (bkz. sayfa sonundaki script). */
+    body.embedded { background: #fff; }
+    body.embedded .container {
+        max-width: none;
+        margin: 0;
+        padding: 24px 28px;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="lang-switch" role="tablist" aria-label="Dil / Language">
+        <button type="button" id="btn-tr" role="tab" aria-selected="true" aria-controls="tr" onclick="setLang('tr')">Türkçe</button>
+        <button type="button" id="btn-en" role="tab" aria-selected="false" aria-controls="en" onclick="setLang('en')">English</button>
+    </div>
+
+    <!-- ================= TÜRKÇE ================= -->
+    <section id="tr" role="tabpanel" aria-labelledby="btn-tr">
+        <header>
+            <h1>INR Takip — Gizlilik Politikası ve Kullanım Koşulları</h1>
+            <div class="last-updated">Son güncellenme: 16 Eylül 2026 | Sürüm 1.1</div>
+        </header>
+
+        <div class="alert-box">
+            <strong>ÖNEMLİ TIBBİ SORUMLULUK REDDİ</strong>
+            <p>
+                INR Takip bir tıbbi cihaz veya teşhis aracı değildir. Uygulama, kan sulandırıcı (ör. warfarin)
+                kullanan kişilerin kendi INR ölçümlerini, ilaç planlarını ve alımlarını kaydetmesine yardımcı olan
+                kişisel bir takip aracıdır. Uygulamadaki grafikler, eşik uyarıları, K vitamini bilgileri ve
+                bildirimler doktor tavsiyesi yerine geçmez. Doz değişikliğini yalnızca hekiminiz yapar; acil bir
+                durumda sağlık kuruluşuna başvurun.
+            </p>
+        </div>
+
+        <h2>1. Veri Sorumlusu</h2>
+        <p>
+            INR Takip uygulaması Mirket Teknoloji ("biz") tarafından geliştirilmiştir. Bu politika, 6698 sayılı
+            Kişisel Verilerin Korunması Kanunu (KVKK), Avrupa Birliği Genel Veri Koruma Tüzüğü (GDPR) ve Apple
+            App Store ile Google Play geliştirici politikaları uyarınca hangi verileri işlediğimizi açıklar.
+        </p>
+
+        <h2>2. İşlenen Veriler</h2>
+
+        <h3>a. Hesap bilgileri</h3>
+        <ul>
+            <li>Uygulamayı kullanmak için hesap oluşturmanız gerekir. Bu amaçla e-posta adresiniz ve size atanan
+                kullanıcı kimliği (UID) işlenir.</li>
+            <li>Parolanız tarafımızca görülmez; Google Firebase Authentication tarafından güvenli biçimde saklanır.</li>
+        </ul>
+
+        <h3>b. Sağlık ve takip verileri</h3>
+        <ul>
+            <li>INR ölçümleriniz, ölçüm tarihleri, hedef aralığınız ve kritik eşikleriniz.</li>
+            <li>İlaç planınız: ilaç adı, tablet gücü, doz saatleri, sıklık ve "aldım / atladım" kayıtları.</li>
+            <li>K vitamini günlüğünüz: kaydettiğiniz gıdalar, porsiyon ve tarih bilgisi.</li>
+            <li>Kayıtlara eklediğiniz isteğe bağlı notlar.</li>
+            <li>Profil bilgileriniz ve girdiğiniz acil durum kişisinin adı ile telefon numarası.</li>
+        </ul>
+
+        <h3>c. Kamera</h3>
+        <ul>
+            <li>İsterseniz INR ölçüm cihazınızın ekranındaki değeri kamerayla okutabilirsiniz.</li>
+            <li>Görüntüler tamamen cihazınızda işlenir (Google ML Kit metin tanıma). Fotoğraf çekilip saklanmaz,
+                hiçbir sunucuya yüklenmez.</li>
+            <li>Uygulama ses kaydı yapmaz ve mikrofonunuzu kullanmaz.</li>
+        </ul>
+
+        <h3>d. Abonelik bilgileri</h3>
+        <ul>
+            <li>Premium aboneliğinizin durumu ve süresi (aylık, yıllık veya ömür boyu).</li>
+            <li>Kredi kartı ve ödeme bilgileriniz tarafımızca görülmez veya saklanmaz; tüm ödemeler App Store veya
+                Google Play tarafından işlenir. Abonelik doğrulaması için RevenueCat kullanılır.</li>
+        </ul>
+
+        <h2>3. Verilerin Saklanması</h2>
+        <ul>
+            <li><strong>Cihazınızda:</strong> Kayıtlarınız öncelikli olarak cihazınızdaki yerel veritabanında (SQLite)
+                saklanır. Uygulama internet olmadan da çalışır.</li>
+            <li><strong>Bulut yedeği (Premium):</strong> Bulut yedeği açıkken profiliniz, INR ölçümleriniz ve ilaç
+                planınız Google Cloud Firestore'a şifreli bağlantı (TLS) ile iletilir ve orada saklanır. Güvenlik
+                kuralları gereği bu verilere yalnızca oturum açmış olan ilgili kullanıcı erişebilir.</li>
+            <li>K vitamini günlüğünüz yalnızca cihazınızda tutulur; buluta yüklenmez.</li>
+        </ul>
+
+        <h2>4. Verilerin Paylaşımı</h2>
+        <p>
+            Kişisel ve sağlık verileriniz üçüncü taraflara satılmaz, kiralanmaz ve reklam amacıyla kullanılmaz.
+            Uygulamada reklam ağı ve kullanıcı takibi (tracking) bulunmaz. Veriler yalnızca aşağıdaki altyapı
+            sağlayıcılarıyla, uygulamanın işlevi için işlenir:
+        </p>
+        <table>
+            <tr><th>Sağlayıcı</th><th>Amaç</th></tr>
+            <tr><td>Google Firebase (Authentication, Cloud Firestore)</td><td>Hesap doğrulama ve bulut yedeği</td></tr>
+            <tr><td>RevenueCat</td><td>Abonelik haklarının doğrulanması</td></tr>
+            <tr><td>Apple App Store / Google Play</td><td>Ödeme işlemleri</td></tr>
+        </table>
+        <p>
+            <strong>Sizin başlattığınız paylaşımlar:</strong> Kritik değer uyarısında veya "yakınla paylaşım"
+            özelliğinde uygulama, acil durum kişinize gönderilmek üzere cihazınızın mesaj uygulamasında bir taslak
+            açar. Mesaj siz göndermeden iletilmez ve sunucularımızdan geçmez.
+        </p>
+
+        <h2>5. Haklarınız ve Veri Silme</h2>
+        <ul>
+            <li><strong>Hesabı ve tüm verileri silme:</strong> Uygulamada <em>Profil &gt; Hesabımı sil</em>
+                seçeneğiyle hesabınızı, buluttaki yedeğinizi ve cihazınızdaki kayıtları kalıcı olarak silebilirsiniz.
+                İşlem geri alınamaz. Aktif aboneliğinizi ayrıca App Store veya Google Play ayarlarından iptal
+                etmeniz gerekir.</li>
+            <li><strong>Dışa aktarma:</strong> Premium abonelikle INR ve doz kayıtlarınızı PDF raporu olarak
+                cihazınıza kaydedebilir veya hekiminizle paylaşabilirsiniz.</li>
+            <li>KVKK ve GDPR kapsamındaki erişim, düzeltme, silme ve itiraz haklarınız için aşağıdaki e-posta
+                adresinden bize ulaşabilirsiniz.</li>
+        </ul>
+
+        <h2>6. Bildirimler</h2>
+        <p>
+            Uygulama, ilaç saatlerinizi hatırlatmak ve kritik INR değerlerinde sizi uyarmak için cihazınızın yerel
+            bildirim sistemini kullanır. Bildirimleri cihaz ayarlarından kapatabilirsiniz.
+        </p>
+
+        <h2>7. Çocukların Gizliliği</h2>
+        <p>
+            Uygulama 13 yaşın altındaki çocuklara yönelik değildir ve onlardan bilerek veri toplanmaz.
+        </p>
+
+        <h2>8. Politika Değişiklikleri</h2>
+        <p>
+            Bu politika, yasal düzenlemeler veya yeni özellikler doğrultusunda güncellenebilir. Değişiklikler bu
+            sayfada yayımlandığı anda geçerli olur.
+        </p>
+
+        <div class="contact-box">
+            <h3>İletişim</h3>
+            <p>Gizlilik, veri silme talepleri ve diğer sorularınız için:</p>
+            <p>
+                <strong>Geliştirici:</strong> Mirket Teknoloji<br>
+                <strong>E-posta:</strong> <a href="mailto:iletisim@mirketteknoloji.com">iletisim@mirketteknoloji.com</a><br>
+                <strong>Web:</strong> <a href="https://mirketteknoloji.com" target="_blank" rel="noopener">mirketteknoloji.com</a>
+            </p>
+        </div>
+
+        <footer>&copy; 2026 Mirket Teknoloji. Tüm hakları saklıdır.</footer>
+    </section>
+
+    <!-- ================= ENGLISH ================= -->
+    <section id="en" role="tabpanel" aria-labelledby="btn-en" hidden>
+        <header>
+            <h1>INR Takip — Privacy Policy and Terms of Use</h1>
+            <div class="last-updated">Last updated: 16 September 2026 | Version 1.1</div>
+        </header>
+
+        <div class="alert-box">
+            <strong>IMPORTANT MEDICAL DISCLAIMER</strong>
+            <p>
+                INR Takip is not a medical device or a diagnostic tool. It is a personal tracking app that helps
+                people taking anticoagulants (e.g. warfarin) record their own INR results, medication plans and
+                doses. Charts, threshold alerts, vitamin K information and notifications in the app are not a
+                substitute for medical advice. Only your doctor should change your dose; in an emergency, contact a
+                healthcare provider.
+            </p>
+        </div>
+
+        <h2>1. Data Controller</h2>
+        <p>
+            INR Takip is developed by Mirket Teknoloji ("we"). This policy explains what data we process, in line
+            with the Turkish Personal Data Protection Law (KVKK), the EU General Data Protection Regulation (GDPR)
+            and the Apple App Store and Google Play developer policies.
+        </p>
+
+        <h2>2. Data We Process</h2>
+
+        <h3>a. Account information</h3>
+        <ul>
+            <li>An account is required to use the app. For this we process your email address and the user
+                identifier (UID) assigned to you.</li>
+            <li>We never see your password; it is stored securely by Google Firebase Authentication.</li>
+        </ul>
+
+        <h3>b. Health and tracking data</h3>
+        <ul>
+            <li>Your INR results, their dates, your target range and your critical thresholds.</li>
+            <li>Your medication plan: name, tablet strength, dose times, frequency and "taken / skipped" records.</li>
+            <li>Your vitamin K journal: the foods you log, portion size and date.</li>
+            <li>Optional notes you add to your records.</li>
+            <li>Your profile and the name and phone number of the emergency contact you enter.</li>
+        </ul>
+
+        <h3>c. Camera</h3>
+        <ul>
+            <li>You may optionally use the camera to read the value shown on your INR meter's screen.</li>
+            <li>Images are processed entirely on your device (Google ML Kit text recognition). No photo is saved or
+                uploaded to any server.</li>
+            <li>The app does not record audio and does not use your microphone.</li>
+        </ul>
+
+        <h3>d. Subscription information</h3>
+        <ul>
+            <li>The status and period of your Premium subscription (monthly, annual or lifetime).</li>
+            <li>We never see or store your card or payment details; all payments are handled by the App Store or
+                Google Play. RevenueCat is used to verify subscription entitlements.</li>
+        </ul>
+
+        <h2>3. How Data Is Stored</h2>
+        <ul>
+            <li><strong>On your device:</strong> Your records are stored primarily in a local database (SQLite) on
+                your device. The app works without an internet connection.</li>
+            <li><strong>Cloud backup (Premium):</strong> When cloud backup is on, your profile, INR results and
+                medication plan are transmitted over an encrypted connection (TLS) to Google Cloud Firestore and
+                stored there. Security rules allow only the signed-in owner to access this data.</li>
+            <li>Your vitamin K journal stays on your device only; it is never uploaded to the cloud.</li>
+        </ul>
+
+        <h2>4. Data Sharing</h2>
+        <p>
+            We do not sell or rent your personal or health data, and we do not use it for advertising. The app
+            contains no advertising networks and no user tracking. Data is processed only with the following
+            infrastructure providers, solely to run the app:
+        </p>
+        <table>
+            <tr><th>Provider</th><th>Purpose</th></tr>
+            <tr><td>Google Firebase (Authentication, Cloud Firestore)</td><td>Account authentication and cloud backup</td></tr>
+            <tr><td>RevenueCat</td><td>Verifying subscription entitlements</td></tr>
+            <tr><td>Apple App Store / Google Play</td><td>Payment processing</td></tr>
+        </table>
+        <p>
+            <strong>Sharing you initiate:</strong> For a critical-value alert or the "share with a family member"
+            feature, the app opens a draft in your device's messaging app addressed to your emergency contact.
+            Nothing is sent until you send it, and it never passes through our servers.
+        </p>
+
+        <h2>5. Your Rights and Data Deletion</h2>
+        <ul>
+            <li><strong>Delete your account and all data:</strong> In the app, use <em>Profile &gt; Delete my
+                account</em> to permanently delete your account, your cloud backup and the records on your device.
+                This cannot be undone. An active subscription must be canceled separately in your App Store or
+                Google Play settings.</li>
+            <li><strong>Export:</strong> With a Premium subscription you can save your INR and dose records as a PDF
+                report or share it with your doctor.</li>
+            <li>For your rights of access, rectification, erasure and objection under KVKK and GDPR, contact us at
+                the email address below.</li>
+        </ul>
+
+        <h2>6. Notifications</h2>
+        <p>
+            The app uses your device's local notification system to remind you of dose times and to alert you to
+            critical INR values. You can turn notifications off in your device settings.
+        </p>
+
+        <h2>7. Children's Privacy</h2>
+        <p>
+            The app is not directed to children under 13, and we do not knowingly collect data from them.
+        </p>
+
+        <h2>8. Changes to This Policy</h2>
+        <p>
+            We may update this policy as regulations change or new features are added. Changes take effect when
+            published on this page.
+        </p>
+
+        <div class="contact-box">
+            <h3>Contact</h3>
+            <p>For privacy questions, data deletion requests and anything else:</p>
+            <p>
+                <strong>Developer:</strong> Mirket Teknoloji<br>
+                <strong>Email:</strong> <a href="mailto:iletisim@mirketteknoloji.com">iletisim@mirketteknoloji.com</a><br>
+                <strong>Web:</strong> <a href="https://mirketteknoloji.com" target="_blank" rel="noopener">mirketteknoloji.com</a>
+            </p>
+        </div>
+
+        <footer>&copy; 2026 Mirket Teknoloji. All rights reserved.</footer>
+    </section>
+</div>
+
+<script>
+    function setLang(lang) {
+        var isTr = lang === 'tr';
+        document.getElementById('tr').hidden = !isTr;
+        document.getElementById('en').hidden = isTr;
+        document.getElementById('btn-tr').setAttribute('aria-selected', String(isTr));
+        document.getElementById('btn-en').setAttribute('aria-selected', String(!isTr));
+        document.documentElement.lang = lang;
+        // Google Sites gibi gömme ortamlarında sayfa kısıtlı (sandbox) bir
+        // çerçevede açılır ve adres değiştirmek hata verir; dil düğmesinin
+        // çalışmaya devam etmesi için hata yutulur.
+        try {
+            history.replaceState(null, '', lang === 'tr' ? location.pathname : location.pathname + '#en');
+        } catch (e) { /* gömülü görünümde adres değiştirilemez */ }
+    }
+    // Sayfa bir çerçeve içine gömülüyse (Google Sites, iframe) dış kutuyu
+    // kaldırıp içeriği çerçevenin tamamına yay.
+    (function () {
+        var embedded = true;
+        try { embedded = window.self !== window.top; } catch (e) { embedded = true; }
+        if (embedded) document.body.classList.add('embedded');
+    })();
+
+    // Adres "#en" ile açılırsa ya da tarayıcı dili Türkçe değilse İngilizce gösterilir.
+    (function () {
+        var wantsEn = location.hash === '#en' ||
+            (location.hash !== '#tr' && !(navigator.language || '').toLowerCase().startsWith('tr'));
+        if (wantsEn) setLang('en');
+    })();
+</script>
+
+</body>
+</html>

@@ -171,14 +171,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get alertEdemaTitle => 'Possible acute edema + out-of-range INR';
-
-  @override
-  String alertEdemaMessage(String delta, String value) {
-    return 'A sudden weight gain of $delta in the last 24 hours (which can indicate fluid retention) was recorded, and your current INR $value is outside the target range. Consider sharing this with your doctor.';
-  }
-
-  @override
   String reminderTitle(String medication) {
     return 'Time for $medication';
   }
@@ -199,9 +191,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get premiumCloudSync => 'Cloud backup and sync';
-
-  @override
-  String get premiumHealthSync => 'Health app sync';
 
   @override
   String get premiumLockScreenWidget => 'Home screen widget';
@@ -312,7 +301,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationChannelDescription =>
-      'Critical/out-of-range INR values and edema risk alerts';
+      'Critical and out-of-range INR alerts';
 
   @override
   String get reminderChannelName => 'Medication Reminders';
@@ -1010,17 +999,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareUnavailable => 'No app on this device can send messages.';
-
-  @override
-  String get edemaScanNoRisk => 'Edema screening: no risk found.';
-
-  @override
-  String edemaScanRisk(String delta) {
-    return 'Risk detected: $delta gain + out-of-range INR.';
-  }
-
-  @override
-  String get edemaScanTooltip => 'Edema screening';
 
   @override
   String get scanInrTooltip => 'Scan INR with camera';

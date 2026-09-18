@@ -24,8 +24,8 @@ import '../models/patient_profile.dart';
 import '../models/vitamin_k_log.dart';
 import 'repositories.dart';
 
-/// Tek, paylaşılan sqlite bağlantısı. Her repository (ve arka plan
-/// izolatlarındaki WorkManager görevleri) aynı fiziksel dosyayı açar --
+/// Tek, paylaşılan sqlite bağlantısı. Her repository (ve bildirim arka plan
+/// izolatı) aynı fiziksel dosyayı açar --
 /// bu yüzden persistent'tir: InMemory* aksine izolat/process yeniden
 /// başlasa da veri kalır.
 class AppDatabase {

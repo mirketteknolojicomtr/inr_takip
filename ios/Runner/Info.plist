@@ -30,10 +30,6 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>INR ölçüm cihazınızın ekranındaki değeri kamerayla okuyup ölçüm formunu otomatik doldurmak için kamera erişimi gerekiyor. Görüntüler cihazınızdan dışarı çıkmaz.</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>Kilo ve nabız verilerinizi INR ile birlikte değerlendirip olası ödem riskini tespit etmek için Sağlık verilerinizi okumamız gerekiyor.</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>INR Takip Sağlık uygulamasına veri yazmaz. Kilo ve nabız verileriniz yalnızca okunur ve INR değerinizle birlikte olası ödem riskini tespit etmek için kullanılır.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>INR Takip ses kaydı yapmaz ve mikrofonunuzu kullanmaz. Kamera yalnızca INR ölçüm cihazınızın ekranındaki değeri okumak için açılır.</string>
 	<key>UIApplicationSceneManifest</key>

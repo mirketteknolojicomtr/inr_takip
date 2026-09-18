@@ -171,14 +171,6 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get alertEdemaTitle => 'Olası akut ödem + hedef dışı INR';
-
-  @override
-  String alertEdemaMessage(String delta, String value) {
-    return 'Son 24 saatte $delta ani kilo artışı (sıvı birikmesi belirtisi olabilir) kaydedildi ve güncel INR $value hedef aralığın dışında. Bu bilgiyi doktorunuzla paylaşmanız önerilir.';
-  }
-
-  @override
   String reminderTitle(String medication) {
     return '$medication zamanı';
   }
@@ -199,9 +191,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get premiumCloudSync => 'Bulut yedek ve senkron';
-
-  @override
-  String get premiumHealthSync => 'Sağlık uygulaması senkronu';
 
   @override
   String get premiumLockScreenWidget => 'Ana ekran widget’ı';
@@ -311,7 +300,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get notificationChannelDescription =>
-      'Kritik/hedef dışı INR değerleri ve ödem riski uyarıları';
+      'Kritik ve hedef dışı INR uyarıları';
 
   @override
   String get reminderChannelName => 'İlaç Hatırlatıcıları';
@@ -1010,17 +999,6 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get shareUnavailable =>
       'Bu cihazda mesaj gönderebilecek bir uygulama bulunamadı.';
-
-  @override
-  String get edemaScanNoRisk => 'Ödem taraması: risk bulunamadı.';
-
-  @override
-  String edemaScanRisk(String delta) {
-    return 'Risk tespit edildi: $delta artış + hedef dışı INR.';
-  }
-
-  @override
-  String get edemaScanTooltip => 'Ödem taraması';
 
   @override
   String get scanInrTooltip => 'Kamerayla INR oku';
